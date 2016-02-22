@@ -60,7 +60,7 @@ new CronJob('0 */1 * * * *', function() {
 }, null, true, 'Europe/Rome');
 
 app.get('/', function (req, res) {
-  res.render('index');
+  res.render('index', {env : env});
 });
 
 app.get('/api/v1/pos', function (req, res) {

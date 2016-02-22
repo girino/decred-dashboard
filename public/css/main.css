@@ -67,3 +67,8 @@ p span.text-black {
   letter-spacing: -2px;
   color: #10a0de;
 }
+
+footer p {
+  text-align: center;
+  color: #909090;
+}

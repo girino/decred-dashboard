@@ -2,12 +2,12 @@ doctype html
 html(lang='en')
   head
     meta(charset='utf-8')
+    title Decred Dashboard, Network Statistics, Charts - Dcrstats
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='description', content='')
-    link(rel='icon', href='favicon.ico')
-    title Decred Dashboard, Network Statistics, Charts - Dcrstats
     meta(name='description', content='An open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain.')
+    meta(name='yandex-verification',content='4a6410aac09ce382')
+    link(rel='icon', href='favicon.ico')
     link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
     link(href='css/bootstrap.min.css', rel='stylesheet')
     link(href='css/main.css', rel='stylesheet')
@@ -28,26 +28,6 @@ html(lang='en')
               a(href='#')
                 span(style='margin-right: 5px;') Chat
                 span.badge(style='background: #ba2121;font-weight: 300;') 50
-            li
-              a(href='#')
-                | Last Price: 
-                span.stats-lastprice -
-            li
-              a(href='#')
-                | Day low: 
-                span.stats-daylow -
-            li
-              a(href='#')
-                | Day High: 
-                span.stats-dayhigh -
-            li
-              a(href='#') 
-                | DCR / BTC: 
-                span.stats-btc -
-            li
-              a(href='#') 
-                | BTC: 
-                span.stats-btc-usd -
     .container
       .row
         .col-xs-6.col-md-3
@@ -110,4 +90,6 @@ html(lang='en')
           #pos-sbits.chart-container
     hr
     footer
-      p(style='text-align: center;color: #909090;') ©2016 dcrstats.com
+      p &copy; 2016 dcrstats.com
+  if env == 'production'
+    script(src='js/metrics.js')
