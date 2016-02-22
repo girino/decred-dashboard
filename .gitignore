@@ -1,6 +1,6 @@
 node_modules
 config/config.json
 public/js/metrics.js
+public/robots.txt
 snippets.js
-robots.txt
 .DS_Store
