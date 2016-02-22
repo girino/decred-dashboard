@@ -6,6 +6,7 @@ See live version here: http://dcrstats.com
 - Postgresql >= 9.3.10
 - Decred software: dcrd, dcrwallet, dcrctl
 - (optional) Nginx for production env (static files delivery)
+
 ### Installation and configuration
 Clone this repository:
 ```
