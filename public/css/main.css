@@ -1,0 +1,69 @@
+body {
+  background: #f2f2f0;
+}
+
+.navbar-inverse {
+  background-color: #373737;
+  border-color: #373737;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #FFFFFF;
+}
+
+.row {
+  margin-bottom: 20px;
+}
+
+p span.text-black {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .glyphicon {
+    display: none;
+  }
+}
+
+/***** Chat *****/
+
+.chat-wrapper {
+  position: fixed;
+  top: 0;
+  height: 100%;
+  width: 320px;
+  right: -320px;
+}
+
+.chart-container {
+  min-width: 310px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+/***** End Chat ****/
+
+.stats-block {
+  background: #fff;
+  padding: 5px 10px;
+  border-radius: 2px;
+  border: 1px solid #EAEAEA;
+}
+
+.stats-title {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.stats-content {
+  display: block;
+  font-weight: 300;
+  font-size: 32px;
+  line-height: 36px;
+  letter-spacing: -2px;
+  color: #10a0de;
+}

@@ -1,0 +1,113 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    link(rel='icon', href='favicon.ico')
+    title Decred Dashboard, Network Statistics, Charts - Dcrstats
+    meta(name='description', content='An open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain.')
+    link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
+    link(href='css/bootstrap.min.css', rel='stylesheet')
+    link(href='css/main.css', rel='stylesheet')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
+    script(src="https://code.highcharts.com/highcharts.js")
+    script(src="https://code.highcharts.com/modules/exporting.js")
+    script(src='js/charts.js')
+    script(src='js/main.js')
+  body
+    nav.navbar.navbar-inverse(style='border-radius: 0;')
+      .container
+        #navbar
+          ul.nav.navbar-nav.navbar-right(style='display: none;')
+            li
+              a(href='#')
+                | Blog
+            li
+              a(href='#')
+                span(style='margin-right: 5px;') Chat
+                span.badge(style='background: #ba2121;font-weight: 300;') 50
+            li
+              a(href='#')
+                | Last Price: 
+                span.stats-lastprice -
+            li
+              a(href='#')
+                | Day low: 
+                span.stats-daylow -
+            li
+              a(href='#')
+                | Day High: 
+                span.stats-dayhigh -
+            li
+              a(href='#') 
+                | DCR / BTC: 
+                span.stats-btc -
+            li
+              a(href='#') 
+                | BTC: 
+                span.stats-btc-usd -
+    .container
+      .row
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Last price:
+            span.stats-content.stats-lastprice -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Day Low:
+            span.stats-content.stats-daylow.text-black -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Day High:
+            span.stats-content.stats-dayhigh.text-black -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title DCR / BTC
+            span.stats-content.stats-btc -
+      .row
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Best block:
+            span.stats-content.stats-blocks.text-black -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Hashrate:
+            span.stats-content.stats-hashrate.text-black -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Difficulty
+            span.stats-content.stats-difficulty.text-black -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Avg block time:
+            span.stats-content.stats-time.text-black -
+
+      .row
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Ticket Price:
+            span.stats-content.stats-ticketprice -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title PoS Poolsize:
+            span.stats-content.stats-poolsize -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Mempool
+            span.stats-content.stats-mempool -
+        .col-xs-6.col-md-3
+          p.stats-block
+            span.stats-title Avg Fees In Mempool:
+            span.stats-content.stats-fees -
+
+      .row
+        .col-xs-12.col-sm-12
+          #pos-poolsize.chart-container
+      .row
+        .col-xs-12.col-sm-12
+          #pos-sbits.chart-container
+    hr
+    footer
+      p(style='text-align: center;color: #909090;') ©2016 dcrstats.com

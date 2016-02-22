@@ -1,0 +1,34 @@
+{
+  "name": "decred",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "apps": [
+    {
+      "name": "Decred app",
+      "script": "server.js",
+      "node_args": [
+        "--harmony"
+      ],
+      "args": [
+        "decred_app"
+      ],
+      "env": {
+        "COMMON_ENV_VAR": "true",
+        "NODE_ENV": "production"
+      }
+    }
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "cron": "^1.1.0",
+    "express": "^4.13.4",
+    "jade": "^1.11.0",
+    "moment": "^2.11.1",
+    "pg": "^4.4.4",
+    "request": "^2.69.0",
+    "sequelize": "^3.19.0"
+  }
+}
