@@ -283,7 +283,7 @@ function calculateAvgFees() {
     getAllTransactions(0, data, 0, function(err, fees) {
       if (fees) {
         Stats.findOne({where : {id : 1}}).then(function(stats) {
-          stats.update({fees : fees}).catch(function(err) {
+          stats.update({fees : fees.avg, max_fees: fees.max}).catch(function(err) {
             console.error(err);
           });
         }).catch(function(err) {
@@ -294,7 +294,19 @@ function calculateAvgFees() {
   });
 }
 
+/**
+ * Returns object with avg and max fees in the mempool
+ * @param {int} counter
+ * @param {array} data
+ * @param {float} result
+ * @param {function} next
+ * @param {float} max_fees (arguments[4])
+ */
 function getAllTransactions(counter, data, result, next) {
+  var max_fees = 0;
+  if (arguments[4]) {
+    max_fees = arguments[4];
+  }
   if (counter < data.length) {
     request(GET_TX + data[counter], function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -310,11 +322,14 @@ function getAllTransactions(counter, data, result, next) {
         if (json.fees) {
           result += json.fees;
           counter++;
+          if (json.fees > max_fees) {
+            max_fees = json.fees;
+          }
         } else {
           data.shift();
         }
 
-        getAllTransactions(counter, data, result, next);
+        getAllTransactions(counter, data, result, next, max_fees);
 
       } else {
         console.error(error);
@@ -322,8 +337,12 @@ function getAllTransactions(counter, data, result, next) {
       }
     });
   } else {
-    var result = data.length ? (result / data.length) : 0;
-    console.log('Avg Fees result:', result);
+    var result = {};
+    result.avg = data.length ? (result / data.length) : 0;
+    result.max = max_fees;
+    console.log('Avg Fee:' + result.avg);
+    console.log('Max Fee:' + result.max);
+
     return next(null,result);
   }
 }

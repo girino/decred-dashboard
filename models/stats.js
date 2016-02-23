@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
+    max_fees: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
     btc_high: {
       type: DataTypes.DOUBLE,
       allowNull: false
