@@ -332,18 +332,27 @@ function getAllTransactions(counter, data, result, next) {
         getAllTransactions(counter, data, result, next, max_fees);
 
       } else {
-        console.error(error);
-        return next(error,null);
+        /* if transaction was not found, we want to remove it from array and continue */
+        if (!error && response.statusCode == 404) {
+          var hash = data[counter];
+          data = data.filter(function(value) { return hash != value; });
+          
+          getAllTransactions(counter, data, result, next, max_fees);
+        } else {
+          console.error('mainnet.decred.org responded with error:', error);
+          console.error('Status code is: ', response.statusCode);
+          return next(error,null);
+        }
       }
     });
   } else {
-    var result = {};
-    result.avg = data.length ? (result / data.length) : 0;
-    result.max = max_fees;
-    console.log('Avg Fee:' + result.avg);
-    console.log('Max Fee:' + result.max);
+    var fees = {};
+    fees.avg = data.length ? (result / data.length) : 0;
+    fees.max = max_fees;
+    console.log('Avg Fee:' + fees.avg);
+    console.log('Max Fee:' + fees.max);
 
-    return next(null,result);
+    return next(null,fees);
   }
 }
 
