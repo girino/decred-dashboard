@@ -64,8 +64,8 @@ $(function() {
           }
           $('div.hint-pos').html(html);
           /* Mempool fees */
-          $('b.avg_fee').html(avg_fee + ' DCR');
-          $('b.max_fee').html(max_fee + ' DCR');
+          $('b.avg-fee').html(avg_fee + ' DCR');
+          $('b.max-fee').html(max_fee + ' DCR');
         }
       }
     });
