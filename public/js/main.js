@@ -42,17 +42,17 @@ $(function() {
           $('span.stats-btc-usd').text('$' + response.usd_price);
 
           var hashrate = (response.networkhashps / 1000 / 1000 / 1000 / 1000).toString().substr(0,5) + ' <span class="hidden-xs">Thash/s</span>';
-          $('span.stats-hashrate').text(hashrate);
-          $('span.stats-blocks').text(numberFormat(response.blocks));
-          $('span.stats-difficulty').text(numberFormat(Math.floor(response.difficulty)));
-          $('span.stats-time').text('0' + response.average_minutes + ':' + response.average_seconds);
+          $('span.stats-hashrate').html(hashrate);
+          $('span.stats-blocks').html(numberFormat(response.blocks));
+          $('span.stats-difficulty').html(numberFormat(Math.floor(response.difficulty)));
+          $('span.stats-time').html('0' + response.average_minutes + ':' + response.average_seconds);
           var ticket_price = response.sbits.toString().substr(0,4);
-          $('span.stats-ticketprice').text(ticket_price + ' <span class="hidden-xs">DCR</span>');
-          $('span.stats-poolsize').text(numberFormat(response.poolsize));
-          $('span.stats-mempool').text(numberFormat(response.pooledtx));
-          var avg_fee = response.fees.toString().substr(0,6);
-          var max_fee = response.max_fees.toString().substr(0,6);
-          $('span.stats-fees').text(avg_fee + ' <span class="hidden-xs">DCR</span>');
+          $('span.stats-ticketprice').html(ticket_price + ' <span class="hidden-xs">DCR</span>');
+          $('span.stats-poolsize').html(numberFormat(response.poolsize));
+          $('span.stats-mempool').html(numberFormat(response.pooledtx));
+          var avg_fee = response.fees ? response.fees.toString().substr(0,6) : 0.05;
+          var max_fee = response.max_fees ? response.max_fees.toString().substr(0,6) : 0.05;
+          $('span.stats-fees').html(avg_fee + ' <span class="hidden-xs">DCR</span>');
 
           /***** Hints blocks *****/
           /* PoS tickets */
