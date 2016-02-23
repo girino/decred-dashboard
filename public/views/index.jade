@@ -6,9 +6,12 @@ html(lang='en')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     meta(name='description', content='An open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain.')
+    meta(property='og:title', content='Decred Dashboard')
+    meta(property='og:description', content='An open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain.')
+    meta(property='og:url', content='http://dcrstats.com')
     meta(name='yandex-verification',content='4a6410aac09ce382')
-    link(rel="icon",type="image/png",href="favicon.png")
-    link(rel="apple-touch-icon",href="apple-touch-favicon.png")
+    link(rel="icon",type="image/png",href="img/favicon.png")
+    link(rel="apple-touch-icon",href="img/apple-touch-favicon.png")
     link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
     link(href='css/bootstrap.min.css', rel='stylesheet')
     link(href='css/main.css', rel='stylesheet')
@@ -80,7 +83,8 @@ html(lang='en')
             span.stats-content.stats-mempool -
         .col-xs-6.col-md-3
           p.stats-block
-            span.stats-title Avg Fees In Mempool:
+            span.stats-title.hidden-xs Avg Fees In Mempool:
+            span.stats-title.visible-xs-block Avg Fees
             span.stats-content.stats-fees -
 
       .row
@@ -89,8 +93,23 @@ html(lang='en')
       .row
         .col-xs-12.col-sm-12
           #pos-sbits.chart-container
-    hr
     footer
-      p &copy; 2016 dcrstats.com
+      div.pull-left
+        p 
+          | Contact: 
+          span
+            | info@dcrstats.com
+        p 
+          | Support project development: 
+          span
+            | Dsgm5RTerEDFQFJsr9uQ27pKQ1sfp5JZqPq
+        div.pluso(data-background='transparent', data-options='medium,square,line,horizontal,counter,theme=02', data-services='twitter,facebook,google', data-title='Decred Dashboard', data-description='Decred is an open and progressive cryptocurrency with a system of community-based governance integrated into its blockchain.', data-url='http://dcrstats.com')
+      div.pull-right
+        p
+          | dcrstats.com is the biggest unofficial dashboard of Decred Network. It is 
+          a(href="https://github.com/Dyrk/decred-dashboard", target="_blank") open source project
+          | &nbsp;so feel free to send any improvements and bug reports on github.
+          | Here you can find plenty of decred network statistics, charts, PoS-mining hints and predictions, FAQ etc.
+          | This project is in continuous development, so feel free to contact us and ask for new functionality ;)
   if env == 'production'
     script(src='js/metrics.js')

@@ -41,15 +41,15 @@ $(function() {
 
           $('span.stats-btc-usd').text('$' + response.usd_price);
 
-          var hashrate = (response.networkhashps / 1000 / 1000 / 1000 / 1000).toString().substr(0,5) + ' Thash/s';
+          var hashrate = (response.networkhashps / 1000 / 1000 / 1000 / 1000).toString().substr(0,5) + ' <span class="hidden-xs">Thash/s</span>';
           $('span.stats-hashrate').text(hashrate);
           $('span.stats-blocks').text(numberFormat(response.blocks));
           $('span.stats-difficulty').text(numberFormat(Math.floor(response.difficulty)));
           $('span.stats-time').text('0' + response.average_minutes + ':' + response.average_seconds);
-          $('span.stats-ticketprice').text(response.sbits.toString().substr(0,4) + ' DCR');
+          $('span.stats-ticketprice').text(response.sbits.toString().substr(0,4) + ' <span class="hidden-xs">DCR</span>');
           $('span.stats-poolsize').text(numberFormat(response.poolsize));
           $('span.stats-mempool').text(numberFormat(response.pooledtx));
-          $('span.stats-fees').text(response.fees.toString().substr(0,6) + ' DCR');
+          $('span.stats-fees').text(response.fees.toString().substr(0,6) + ' <span class="hidden-xs">DCR</span>');
         }
       }
     });

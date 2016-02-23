@@ -23,6 +23,15 @@ p span.text-black {
   .glyphicon {
     display: none;
   }
+  .stats-block .stats-title {
+    font-size: 10px;
+    line-height: 16px;
+  }
+  .stats-block .stats-content {
+    line-height: 36px;
+    letter-spacing: 0;
+    font-size: 20px;
+  }
 }
 
 /***** Chat *****/
@@ -68,7 +77,48 @@ p span.text-black {
   color: #10a0de;
 }
 
+footer {
+  background-color: #292c2f;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  width: 100%;
+  font: bold 16px sans-serif;
+  text-align: left;
+  padding: 50px 60px 40px;
+  margin-top: 40px;
+  overflow: hidden;
+}
+
 footer p {
-  text-align: center;
-  color: #909090;
+  vertical-align: top;
+  margin: 15px 42px 0 0;
+  color: #BDBDBD;
+  max-width: 400px;
+  font-weight: 200;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+footer span, 
+footer a,
+footer a:visited {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+footer a:hover,
+footer a:focus,
+footer a:active {
+  color: #fff;
+}
+
+.pluso {
+  margin-top: 11px;
+}
+
+.pluso-more {
+  visibility: hidden;
+}
+
+footer div.pluso .pluso-wrap a {
+  margin: 3px 3px 0 0;
 }
