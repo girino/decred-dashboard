@@ -77,6 +77,24 @@ p span.text-black {
   color: #10a0de;
 }
 
+.hint {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+  background: #fff;
+  min-height: 171px;
+}
+
+.hint-red {
+  border-left-color: #ce4844;
+}
+
+.hint-blue {
+  border-left-color: #1b809e;
+}
+
 footer {
   background-color: #292c2f;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);

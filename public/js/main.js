@@ -46,10 +46,26 @@ $(function() {
           $('span.stats-blocks').text(numberFormat(response.blocks));
           $('span.stats-difficulty').text(numberFormat(Math.floor(response.difficulty)));
           $('span.stats-time').text('0' + response.average_minutes + ':' + response.average_seconds);
-          $('span.stats-ticketprice').text(response.sbits.toString().substr(0,4) + ' <span class="hidden-xs">DCR</span>');
+          var ticket_price = response.sbits.toString().substr(0,4);
+          $('span.stats-ticketprice').text(ticket_price + ' <span class="hidden-xs">DCR</span>');
           $('span.stats-poolsize').text(numberFormat(response.poolsize));
           $('span.stats-mempool').text(numberFormat(response.pooledtx));
-          $('span.stats-fees').text(response.fees.toString().substr(0,6) + ' <span class="hidden-xs">DCR</span>');
+          var avg_fee = response.fees.toString().substr(0,6);
+          var max_fee = response.max_fees.toString().substr(0,6);
+          $('span.stats-fees').text(avg_fee + ' <span class="hidden-xs">DCR</span>');
+
+          /***** Hints blocks *****/
+          /* PoS tickets */
+          var html = '';
+          if (response.sbits <= 3) {
+            html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very close to all time low. <br> Hurry to take the best price.</p></div>';
+          } else {
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very high, compering with all time low value 2DCR. <br> We suggest to wait for the next PoS-difficulty adjustment.</p></div>';
+          }
+          $('div.hint-pos').html(html);
+          /* Mempool fees */
+          $('b.avg_fee').html(avg_fee + ' DCR');
+          $('b.max_fee').html(max_fee + ' DCR');
         }
       }
     });
