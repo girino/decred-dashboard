@@ -183,3 +183,48 @@ function drawSbits(data) {
 
 });
 }
+
+function drawVotersChart(data, missed, total) {
+    $(function () {
+
+    $(document).ready(function () {
+
+        var percent_missed = (missed / total * 100).toString().substr(0,4) + '%';
+
+        // Build the chart
+        $('#voters').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Voters per block'
+            },
+            subtitle: {
+                text: "<b>"+percent_missed+"</b> tickets didn't cast a vote ("+missed+" of "+total+")"
+            },
+            tooltip: {
+                pointFormat: '<b>{point.y} blocks</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    },
+                    showInLegend: false
+                }
+            },
+            series: [{
+                name: 'Votes',
+                colorByPoint: true,
+                data: data
+            }]
+        });
+    });
+});
+}

@@ -55,6 +55,18 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: false
     },
+    three_voters: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    four_voters: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    five_voters: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.DATE
     },

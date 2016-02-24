@@ -19,6 +19,7 @@ if (env == 'development') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+var sequelize = require('./models').sequelize;
 var Blocks = require('./models').Blocks;
 var PosAvg = require('./models').PosAvg;
 var Stats = require('./models').Stats;
@@ -26,7 +27,12 @@ var Stats = require('./models').Stats;
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
 const GET_TX = 'https://mainnet.decred.org/api/tx/';
+
 const FIRST_BLOCK_TIME = 1454954535;
+const PREMINE = 1680000;
+/* (4095 - 1) blocks * 21.83707864 DCR ~ 89401 */
+const MINED_DCR_BEFORE_POS = 89401;
+const DCR_TOTAL = PREMINE + MINED_DCR_BEFORE_POS;
 
 new CronJob('0 */5 * * * *', function() {
   /* Add new blocks */
@@ -38,8 +44,12 @@ new CronJob('0 */5 * * * *', function() {
     console.log(err);
   });
 
+  /* Count total missed tickets */
+  checkMissedTickets()
+
   /* Calculate average fees in the mempool */
   calculateAvgFees();
+
 }, null, true, 'Europe/Rome');
 
 new CronJob('0 */1 * * * *', function() {
@@ -355,6 +365,41 @@ function getAllTransactions(counter, data, result, next) {
 
     return next(null,fees);
   }
+}
+
+function checkMissedTickets() {
+  /* Select blocks count grouped by votes amount*/
+  let query = {
+    attributes: ['voters', [sequelize.fn('COUNT', sequelize.col('id')), 'blocks']],
+    where: {
+      voters: {$ne : 0}
+    }, 
+    group: ['voters']
+  };
+
+  Blocks.findAll(query).then(function(result) {
+
+    Stats.findOne({where : {id : 1}}).then(function(stats) {
+      let data = {};
+      for (let row of result) {
+        if (row.voters == 3) {
+          data.three_voters = row.blocks;
+        } else if (row.voters == 4) {
+          data.four_voters = row.blocks;
+        } else if (row.voters == 5) {
+          data.five_voters = row.blocks;
+        }
+      }
+      stats.update(data);
+      return;
+    }).catch(function(err) {
+      console.log(err); return;
+    });
+
+  }).catch(function(err) {
+    console.log(err); return;
+  });
+
 }
 
 app.listen(8080, function () {

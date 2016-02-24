@@ -1,9 +1,10 @@
 $(function() {
 
-  updateStats();
-  setInterval(updateStats, 60000);
+  updateStats(true);
+  setInterval(updateStats(false), 60000);
 
-  function updateStats() {
+  function updateStats(isStartup) {
+
     var nonce = (new Date()).getTime();
     $.ajax({
       url : '/api/v1/get_stats?'+nonce,
@@ -67,6 +68,24 @@ $(function() {
           /* Mempool fees */
           $('b.avg-fee').html(avg_fee + ' DCR');
           $('b.max-fee').html(max_fee + ' DCR');
+
+          /* Draw voters chart on page load */
+          var voters = [{
+                    name: '5 voters',
+                    y: response.five_voters,
+                    color: '#3498DB'
+                }, {
+                    name: '4 voters',
+                    y: response.four_voters,
+                    color: '#E7A03C'
+                }, {
+                    name: '3 voters',
+                    y: response.three_voters,
+                    color: '#E74C3C'
+                }];
+          var missed = response.four_voters + 2 * response.three_voters;
+          var total = 5 * (response.blocks - 4095);
+          drawVotersChart(voters, missed, total);
         }
       }
     });
