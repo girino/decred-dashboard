@@ -96,8 +96,8 @@ $(function() {
             var supply = {
               premine: 1680000,
               pow: response.mined_before_pos - (response.reward * 0.1 * 4095) + 0.6 * (response.blocks - 4095) * response.reward - 0.2 * missed * response.reward,
-              pos: 0.06 * (response.blocks - 4095) * (total - missed) * response.reward,
-              devs: (response.reward * 0.1 * 4095) + 
+              pos: 0.06 * (total - missed) * response.reward,
+              devs: (response.reward * 0.1 * 4095) + 0.1 * (response.blocks - 4095) * response.reward
             };
             console.log(supply);
             drawSupplyChart(supply);

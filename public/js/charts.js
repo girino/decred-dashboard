@@ -234,8 +234,9 @@ $(function () {
 
     $(document).ready(function () {
 
-        var percent_mined = ((1680000 + data.pow + data.pos + data.devs) / 21000000 * 100).toString().substr(0,4) + '%';
-
+        var total = Math.floor(1680000 + data.pow + data.pos + data.devs);
+        var percent_mined = (total / 21000000 * 100).toString().substr(0,4) + '%';
+        
         // Build the chart
         $('#supply').highcharts({
             chart: {
