@@ -2,6 +2,10 @@ body {
   background: #f2f2f0;
 }
 
+#navbar .navbar-brand {
+  padding: 5px 15px;
+}
+
 .navbar-inverse {
   background-color: #373737;
   border-color: #373737;

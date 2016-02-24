@@ -4,8 +4,9 @@ $(function() {
   setInterval(updateStats, 60000);
 
   function updateStats() {
+    var nonce = (new Date()).getTime();
     $.ajax({
-      url : '/api/v1/get_stats',
+      url : '/api/v1/get_stats?'+nonce,
       type: 'GET',
       success: function(response) {
 

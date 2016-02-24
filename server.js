@@ -336,6 +336,7 @@ function getAllTransactions(counter, data, result, next) {
         if (!error && response.statusCode == 404) {
           var hash = data[counter];
           data = data.filter(function(value) { return hash != value; });
+          console.log('Handle 404 response from mainnet.decred.org; Transaction was removed from array');
           
           getAllTransactions(counter, data, result, next, max_fees);
         } else {
