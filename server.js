@@ -28,7 +28,9 @@ const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
 const GET_TX = 'https://mainnet.decred.org/api/tx/';
 
+const SUPPLY = 21000000;
 const FIRST_BLOCK_TIME = 1454954535;
+const SUBSIDY = 31.19582664;
 const PREMINE = 1680000;
 /* (4095 - 1) blocks * 21.83707864 DCR ~ 89401 */
 const MINED_DCR_BEFORE_POS = 89401;
@@ -131,6 +133,10 @@ app.get('/api/v1/get_stats', function (req, res) {
       stats.average_seconds = Math.floor(stats.average_time % 60);
       stats.poolsize = block.poolsize;
       stats.sbits = block.sbits;
+      stats.supply = SUPPLY;
+      stats.premine = PREMINE;
+      stats.mined_before_pos = MINED_DCR_BEFORE_POS;
+      stats.reward = SUBSIDY;
 
       res.status(200).json(stats);
     });
@@ -382,6 +388,7 @@ function checkMissedTickets() {
     Stats.findOne({where : {id : 1}}).then(function(stats) {
       let data = {};
       for (let row of result) {
+        row = row.dataValues;
         if (row.voters == 3) {
           data.three_voters = row.blocks;
         } else if (row.voters == 4) {

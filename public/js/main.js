@@ -70,22 +70,38 @@ $(function() {
           $('b.max-fee').html(max_fee + ' DCR');
 
           /* Draw voters chart on page load */
-          var voters = [{
-                    name: '5 voters',
-                    y: response.five_voters,
-                    color: '#3498DB'
-                }, {
-                    name: '4 voters',
-                    y: response.four_voters,
-                    color: '#E7A03C'
-                }, {
-                    name: '3 voters',
-                    y: response.three_voters,
-                    color: '#E74C3C'
-                }];
-          var missed = response.four_voters + 2 * response.three_voters;
-          var total = 5 * (response.blocks - 4095);
-          drawVotersChart(voters, missed, total);
+          if (isStartup) {
+            var voters = [{
+                      name: '5 voters',
+                      y: response.five_voters,
+                      color: '#3498DB'
+                  }, {
+                      name: '4 voters',
+                      y: response.four_voters,
+                      color: '#E7A03C'
+                  }, {
+                      name: '3 voters',
+                      y: response.three_voters,
+                      color: '#E74C3C'
+                  }];
+            var missed = response.four_voters + 2 * response.three_voters;
+            var total = 5 * (response.blocks - 4095);
+            drawVotersChart(voters, missed, total);
+          }
+
+          /* Draw supply chart on page load */
+          if (isStartup) {
+            var max_reward = (response.blocks - 4095) * response.reward;
+            // TODO: omg, check this math 10 times more
+            var supply = {
+              premine: 1680000,
+              pow: response.mined_before_pos - (response.reward * 0.1 * 4095) + 0.6 * (response.blocks - 4095) * response.reward - 0.2 * missed * response.reward,
+              pos: 0.06 * (response.blocks - 4095) * (total - missed) * response.reward,
+              devs: (response.reward * 0.1 * 4095) + 
+            };
+            console.log(supply);
+            drawSupplyChart(supply);
+          }
         }
       }
     });

@@ -228,3 +228,64 @@ function drawVotersChart(data, missed, total) {
     });
 });
 }
+
+function drawSupplyChart(data) {
+$(function () {
+
+    $(document).ready(function () {
+
+        var percent_mined = ((1680000 + data.pow + data.pos + data.devs) / 21000000 * 100).toString().substr(0,4) + '%';
+
+        // Build the chart
+        $('#supply').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Decred supply'
+            },
+            subtitle: {
+                text: "<b>"+percent_mined+"</b> DCR mined so far: "+total+" of total 21 000 000"
+            },
+            tooltip: {
+                pointFormat: '<b>{point.y} DCR</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    },
+                    showInLegend: false
+                }
+            },
+            series: [{
+                name: 'Votes',
+                colorByPoint: true,
+                data: [{
+                    name: 'Premine',
+                    y: 1680000,
+                    color: '#3498DB'
+                }, {
+                    name: 'PoW-mined',
+                    y: Math.floor(data.pow),
+                    color: '#E7A03C'
+                }, {
+                    name: 'PoS-mined',
+                    y: Math.floor(data.pos),
+                    color: '#E74C3C'
+                }, {
+                    name: 'Dev fees',
+                    y: Math.floor(data.devs),
+                    color: '#31BDB4'
+                }]
+            }]
+        });
+    });
+});
+}
