@@ -48,7 +48,16 @@ $(function() {
           $('span.stats-blocks').html(numberFormat(response.blocks));
           $('span.stats-difficulty').html(numberFormat(Math.floor(response.difficulty)));
           $('span.stats-time').html('0' + response.average_minutes + ':' + response.average_seconds);
-          var ticket_price = response.sbits.toString().substr(0,4);
+
+          var ticket_price = response.sbits.toString().substr(0,4); 
+          /* 2.00000001 -> 2.01
+           * 2.09999999 -> 2.10
+           */
+          ticket_price = parseFloat(ticket_price);
+          if (response.sbits > ticket_price) { 
+            ticket_price = Math.round((ticket_price + 0.01) * 100) / 100;
+          }
+
           $('span.stats-ticketprice').html(ticket_price + ' <span class="hidden-xs">DCR</span>');
           $('span.stats-poolsize').html(numberFormat(response.poolsize));
           $('span.stats-mempool').html(numberFormat(response.pooledtx));
