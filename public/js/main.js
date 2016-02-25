@@ -71,9 +71,17 @@ $(function() {
           if (response.sbits <= 4) {
             html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very close to all time low. <br> Hurry to take the best price.</p></div>';
           } else {
-            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very high, compering with all time low value 2 DCR. <br> We suggest to wait for the next PoS-difficulty adjustment.</p></div>';
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is very high compared with all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
           }
           $('div.hint-pos').html(html);
+
+          var est_pos_blocks = 144 - (response.blocks % 144);
+          var est_pos_time = secondsToTime(est_pos_blocks * average_time);
+
+          $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
+          $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
+          $('.est-pos-price').html('~ <b>¯\_(ツ)_/¯</b> <sup>beta</sup>');
+
           /* Mempool fees */
           $('b.avg-fee').html(avg_fee + ' DCR');
           $('b.max-fee').html(max_fee + ' DCR');
@@ -104,9 +112,9 @@ $(function() {
             // TODO: omg, check this math 10 times more
             var supply = {
               premine: 1680000,
-              pow: response.mined_before_pos - (response.reward * 0.1 * 4095) + 0.6 * (response.blocks - 4095) * response.reward - 0.2 * missed * response.reward,
+              pow: response.mined_before_pos - (response.reward * 0.1 * 4095) + 0.6 * (response.blocks - 4095) * response.reward - 0.2 * 0.6 * missed * response.reward,
               pos: 0.06 * (total - missed) * response.reward,
-              devs: (response.reward * 0.1 * 4095) + 0.1 * (response.blocks - 4095) * response.reward
+              devs: (response.reward * 0.1 * 4095) + 0.1 * (response.blocks - 4095) * response.reward - 0.2 * 0.1 * missed * response.reward
             };
             console.log(supply);
             drawSupplyChart(supply);
@@ -137,4 +145,16 @@ $(function () {
 
 function numberFormat(number) {
     return number.toString().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
+}
+
+function secondsToTime(secs) {
+  var hours = Math.floor(secs / (60 * 60));
+  
+  var divisor_for_minutes = secs % (60 * 60);
+  var minutes = Math.floor(divisor_for_minutes / 60);
+  if (minutes < 10) {
+    minutes = "0" + minutes.toString();
+  }
+
+  return {"hours": hours, "minutes": minutes};
 }

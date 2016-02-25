@@ -86,13 +86,25 @@ html(lang='en')
             span.stats-title.hidden-xs Avg Fees In Mempool:
             span.stats-title.visible-xs-block Avg Fees
             span.stats-content.stats-fees -
+      .row(style="display: none;")
+        .col-xs-6.col-md-3
+          .hint.hint-blue
+            span.stats-title PoS-price adjustment
+            h5.est-pos-time
+            h5.est-pos-blocks
+        .col-xs-6.col-md-3
+          .hint.hint-blue
+            span.stats-title Estimated PoS price
+            h5.est-pos-price
+        .col-xs-12.col-md-6.hint-pos
+
       .row
         .col-xs-12.col-md-6.mobile-top-chart
           #voters.chart-container
         .col-xs-12.col-md-6
           #supply.chart-container
-      .row
-        .col-xs-12.col-md-6.hint-pos
+      //.row
+        .col-xs-12.col-md-6
 
         .col-xs-12.col-md-6
           .hint.hint-blue
