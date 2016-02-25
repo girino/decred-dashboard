@@ -269,21 +269,25 @@ $(function () {
                 name: 'Votes',
                 colorByPoint: true,
                 data: [{
-                    name: 'Premine',
-                    y: 1680000,
+                    name: 'Devs Premine',
+                    y: 840000,
                     color: '#3498DB'
+                }, {
+                    name: 'Airdrop',
+                    y: 840000,
+                    color: '#31BDB4'
                 }, {
                     name: 'PoW-mined',
                     y: Math.floor(data.pow),
-                    color: '#E7A03C'
+                    color: '#E74C3C'
                 }, {
                     name: 'PoS-mined',
                     y: Math.floor(data.pos),
-                    color: '#E74C3C'
+                    color: '#E7A03C'
                 }, {
                     name: 'Dev fees',
                     y: Math.floor(data.devs),
-                    color: '#31BDB4'
+                    color: '#67B8D6'
                 }]
             }]
         });
