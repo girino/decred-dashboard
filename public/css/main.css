@@ -36,6 +36,13 @@ p span.text-black {
     letter-spacing: 0;
     font-size: 20px;
   }
+  .mobile-top-chart {
+    margin-bottom: 20px;
+  }
+}
+
+.chart-container {
+  margin: 0 auto;
 }
 
 /***** Chat *****/
@@ -46,12 +53,6 @@ p span.text-black {
   height: 100%;
   width: 320px;
   right: -320px;
-}
-
-.chart-container {
-  min-width: 310px;
-  height: 400px;
-  margin: 0 auto;
 }
 
 /***** End Chat ****/

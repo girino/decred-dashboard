@@ -336,6 +336,7 @@ function getAllTransactions(counter, data, result, next) {
         
         // "fees" could be null
         if (json.fees) {
+          console.log("Fees: ", json.fees);
           result += json.fees;
           counter++;
           if (json.fees > max_fees) {
@@ -366,6 +367,8 @@ function getAllTransactions(counter, data, result, next) {
     var fees = {};
     fees.avg = data.length ? (result / data.length) : 0;
     fees.max = max_fees;
+    console.log(data.length + ' transactions processed');
+    console.log('Total Fees:' + result);
     console.log('Avg Fee:' + fees.avg);
     console.log('Max Fee:' + fees.max);
 

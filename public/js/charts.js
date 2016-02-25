@@ -249,7 +249,7 @@ $(function () {
                 text: 'Decred supply'
             },
             subtitle: {
-                text: "<b>"+percent_mined+"</b> DCR mined so far: "+total+" of total 21 000 000"
+                text: "<b>"+percent_mined+"</b> DCR mined so far: "+numberFormat(total)+" of total 21 000 000"
             },
             tooltip: {
                 pointFormat: '<b>{point.y} DCR</b>'

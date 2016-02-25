@@ -59,10 +59,10 @@ $(function() {
           /***** Hints blocks *****/
           /* PoS tickets */
           var html = '';
-          if (response.sbits <= 3) {
+          if (response.sbits <= 4) {
             html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very close to all time low. <br> Hurry to take the best price.</p></div>';
           } else {
-            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very high, compering with all time low value 2DCR. <br> We suggest to wait for the next PoS-difficulty adjustment.</p></div>';
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>The current ticket price <b>'+ticket_price+' DCR</b> is very high, compering with all time low value 2 DCR. <br> We suggest to wait for the next PoS-difficulty adjustment.</p></div>';
           }
           $('div.hint-pos').html(html);
           /* Mempool fees */
