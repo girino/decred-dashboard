@@ -14,12 +14,12 @@ html(lang='en')
     link(rel="apple-touch-icon",href="img/apple-touch-favicon.png")
     link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
     link(href='css/bootstrap.min.css', rel='stylesheet')
-    link(href='css/main.css?v2', rel='stylesheet')
+    link(href='css/main.css?v3', rel='stylesheet')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
     script(src="https://code.highcharts.com/highcharts.js")
     script(src="https://code.highcharts.com/modules/exporting.js")
-    script(src='js/charts.js?v2')
-    script(src='js/main.js?v2')
+    script(src='js/charts.js?v3')
+    script(src='js/main.js?v3')
   body
     nav.navbar.navbar-inverse(style='border-radius: 0;')
       .container
@@ -86,10 +86,11 @@ html(lang='en')
             span.stats-title.hidden-xs Avg Fees In Mempool:
             span.stats-title.visible-xs-block Avg Fees
             span.stats-content.stats-fees -
-      .row.reward-hints(style="display: none;")
+      .row.reward-hints
         .col-xs-6.col-md-3
           .hint.hint-blue.hint-sm
-            span.stats-title Ticket price adjustment
+            span.stats-title.hidden-xs Ticket price adjustment
+            span.stats-title.visible-xs-block Ticket price change
             h5.est-pos-time
             h5.est-pos-blocks
         .col-xs-6.col-md-3
@@ -105,7 +106,8 @@ html(lang='en')
             p.dev-block-reward
         .col-xs-6.col-md-3
           .hint.hint-red.hint-md
-            span.stats-title Reward adjustment
+            span.stats-title.hidden-xs Reward adjustment
+            span.stats-title.visible-xs-block Next reward
             h5.est-block-reward
             h5.est-reward-time
             h5.est-reward-blocks

@@ -39,6 +39,9 @@ p span.text-black {
   .mobile-top-chart {
     margin-bottom: 20px;
   }
+  .reward-hints .hint h5 {
+    font-size: 14px !important;
+  }
   .reward-hints .hint-md {
       min-height: 274px !important;
   }
