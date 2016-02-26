@@ -39,6 +39,12 @@ p span.text-black {
   .mobile-top-chart {
     margin-bottom: 20px;
   }
+  .reward-hints .hint-md {
+      min-height: 274px !important;
+  }
+  .reward-hints .hint-sm {
+      min-height: 221px !important;
+  }
 }
 
 .chart-container {
@@ -92,7 +98,8 @@ p span.text-black {
   min-height: 171px;
 }
 
-.reward-hints .hint-md {
+.reward-hints .hint-md,
+.reward-hints .hint-sm {
   min-height: 195px;
 }
 

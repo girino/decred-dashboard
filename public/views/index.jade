@@ -14,12 +14,12 @@ html(lang='en')
     link(rel="apple-touch-icon",href="img/apple-touch-favicon.png")
     link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
     link(href='css/bootstrap.min.css', rel='stylesheet')
-    link(href='css/main.css?v1', rel='stylesheet')
+    link(href='css/main.css?v2', rel='stylesheet')
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
     script(src="https://code.highcharts.com/highcharts.js")
     script(src="https://code.highcharts.com/modules/exporting.js")
-    script(src='js/charts.js?v1')
-    script(src='js/main.js?v1')
+    script(src='js/charts.js?v2')
+    script(src='js/main.js?v2')
   body
     nav.navbar.navbar-inverse(style='border-radius: 0;')
       .container
@@ -88,13 +88,13 @@ html(lang='en')
             span.stats-content.stats-fees -
       .row.reward-hints(style="display: none;")
         .col-xs-6.col-md-3
-          .hint.hint-blue
-            span.stats-title PoS-price adjustment
+          .hint.hint-blue.hint-sm
+            span.stats-title Ticket price adjustment
             h5.est-pos-time
             h5.est-pos-blocks
         .col-xs-6.col-md-3
-          .hint.hint-blue
-            span.stats-title Estimated PoS price
+          .hint.hint-blue.hint-sm
+            span.stats-title Estimated ticket price
             h5.est-pos-price
         .col-xs-6.col-md-3
           .hint.hint-red.hint-md
@@ -104,7 +104,7 @@ html(lang='en')
             p.pos-block-reward
             p.dev-block-reward
         .col-xs-6.col-md-3
-          .hint.hint-blue.hint-md
+          .hint.hint-red.hint-md
             span.stats-title Reward adjustment
             h5.est-block-reward
             h5.est-reward-time

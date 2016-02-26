@@ -80,19 +80,19 @@ $(function() {
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
-          $('.est-pos-price').html('~ <b>¯\_(ツ)_/¯</b> <sup>beta</sup>');
+          $('.est-pos-price').html('');
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
-          $('.block-reward').html(block_reward.toString().substr(0,11) + ' DCR');
+          $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');
           $('.pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + (block_reward * 0.6).toString().substr(0,6) + ' DCR');
           $('.pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (block_reward * 0.3 / 5).toString().substr(0,6) + ' DCR');
           $('.dev-block-reward').html('<span><b>Dev fee</span></b>: ' + (block_reward * 0.1).toString().substr(0,6) + ' DCR');
 
           var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144), response.reward);
-          $('.est-block-reward').html(next_block_subsidy.toString().substr(0,11) + ' DCR');
-          $('.est-pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + (next_block_subsidy * 0.6).toString().substr(0,6) + ' DCR');
-          $('.est-pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (next_block_subsidy * 0.3 / 5).toString().substr(0,6) + ' DCR');
-          $('.est-dev-block-reward').html('<span><b>Dev fee</span></b>: ' + (next_block_subsidy * 0.1).toString().substr(0,6) + ' DCR');
+          $('.est-block-reward').html(next_block_subsidy.toString().substr(0,5) + ' DCR');
+          //$('.est-pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + (next_block_subsidy * 0.6).toString().substr(0,6) + ' DCR');
+          //$('.est-pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (next_block_subsidy * 0.3 / 5).toString().substr(0,6) + ' DCR');
+          //$('.est-dev-block-reward').html('<span><b>Dev fee</span></b>: ' + (next_block_subsidy * 0.1).toString().substr(0,6) + ' DCR');
 
           var est_subsidy_blocks = 6144 - (response.blocks % 6144);
           var est_subsidy_time = secondsToTime(est_subsidy_blocks * response.average_time);

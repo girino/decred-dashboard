@@ -2,5 +2,6 @@ node_modules
 config/config.json
 public/js/metrics.js
 public/robots.txt
+uploads/usd_price.json
 snippets.js
 .DS_Store
