@@ -83,13 +83,13 @@ $(function() {
           $('.est-pos-price').html('~ <b>¯\_(ツ)_/¯</b> <sup>beta</sup>');
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
-          $('.block-reward').html(block_reward + ' DCR');
+          $('.block-reward').html(block_reward.toString().substr(0,11) + ' DCR');
           $('.pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + (block_reward * 0.6).toString().substr(0,6) + ' DCR');
           $('.pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (block_reward * 0.3 / 5).toString().substr(0,6) + ' DCR');
           $('.dev-block-reward').html('<span><b>Dev fee</span></b>: ' + (block_reward * 0.1).toString().substr(0,6) + ' DCR');
 
           var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144), response.reward);
-          $('.est-block-reward').html(next_block_subsidy + ' DCR');
+          $('.est-block-reward').html(next_block_subsidy.toString().substr(0,11) + ' DCR');
           $('.est-pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + (next_block_subsidy * 0.6).toString().substr(0,6) + ' DCR');
           $('.est-pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (next_block_subsidy * 0.3 / 5).toString().substr(0,6) + ' DCR');
           $('.est-dev-block-reward').html('<span><b>Dev fee</span></b>: ' + (next_block_subsidy * 0.1).toString().substr(0,6) + ' DCR');
@@ -144,6 +144,7 @@ $(function() {
 
 
 $(function () {
+  /*
     $.ajax({
       url: '/api/v1/pos',
       type: 'GET',
@@ -151,6 +152,17 @@ $(function () {
       success: function (data) {
         drawPoolsize(data.poolsize);
         drawSbits(data.sbits);
+      }
+    });
+  */
+    $.ajax({
+      url: '/api/v1/usd_price',
+      type: 'GET',
+      dataType: "json",
+      success: function (data) {
+        if (!data.error) {
+          drawPrice(data);
+        }
       }
     });
 

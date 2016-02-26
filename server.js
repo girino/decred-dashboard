@@ -6,6 +6,7 @@ var moment  = require('moment');
 var bodyParser = require('body-parser');
 var exec    = require('child_process').exec;
 var CronJob = require('cron').CronJob;
+var fs = require('fs');
 
 var env = process.env.NODE_ENV || 'development';
 var app = express();
@@ -26,6 +27,7 @@ var Stats = require('./models').Stats;
 
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
+const MARKET_CAP = 'https://api.coinmarketcap.com/v1/datapoints/decred/';
 const GET_TX = 'https://mainnet.decred.org/api/tx/';
 
 const SUPPLY = 21000000;
@@ -71,6 +73,12 @@ new CronJob('0 */1 * * * *', function() {
   });
 }, null, true, 'Europe/Rome');
 
+updateMarketCap();
+
+new CronJob('0 */15 * * * *', function() {
+  updateMarketCap();
+}, null, true, 'Europe/Rome');
+
 app.get('/', function (req, res) {
   res.render('index', {env : env});
 });
@@ -92,6 +100,23 @@ app.get('/api/v1/pos', function (req, res) {
     res.status(200).json(result);
   }).catch(function(err) {
     console.log(err);
+  });
+});
+
+app.get('/api/v1/usd_price', function (req, res) {
+  fs.readFile('./uploads/usd_price.json', 'utf8', function (err, data) {
+    if (err) {
+      console.log(err);
+      res.status(500).json({error : true}); return;
+    }
+    try {
+      var result = JSON.parse(data);
+    } catch(e) {
+      console.log(e);
+      res.status(500).json({error : true});
+      return;
+    }
+    res.status(200).json(result.usd_price);
   });
 });
 
@@ -410,6 +435,26 @@ function checkMissedTickets() {
     console.log(err); return;
   });
 
+}
+
+function updateMarketCap() {
+  console.log('Updating USD market price.');
+  request(MARKET_CAP, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      try {
+        let json = JSON.parse(body);
+        fs.writeFile("./uploads/usd_price.json", JSON.stringify({usd_price : json.price_usd}), function(err) {
+            if(err) {
+                return console.error(err);
+            }
+            return console.log("USD market price updated.");
+        });
+
+      } catch(e) {
+        console.error('updateMarketCap: ', e); return;
+      }
+    }
+  });
 }
 
 app.listen(8080, function () {
