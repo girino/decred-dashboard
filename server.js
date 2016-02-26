@@ -73,8 +73,6 @@ new CronJob('0 */1 * * * *', function() {
   });
 }, null, true, 'Europe/Rome');
 
-updateMarketCap();
-
 new CronJob('0 */15 * * * *', function() {
   updateMarketCap();
 }, null, true, 'Europe/Rome');
@@ -84,22 +82,38 @@ app.get('/', function (req, res) {
 });
 
 app.get('/api/v1/pos', function (req, res) {
-  PosAvg.findAll({order: 'timestamp ASC'}).then(function(data) {
-    var result = {};
-    var poolsize = [];
-    var sbits = [];
-    for (let day of data) {
-      poolsize.push([day.timestamp * 1000, day.poolsize]);
-      sbits.push([day.timestamp * 1000, day.sbits]);
+  var result = {};
+  var poolsize = [];
+  var sbits = [];
+  let query = `SELECT DISTINCT(sbits), MIN(datetime) as datetime
+               from blocks group by sbits order by datetime asc`;
+  sequelize.query(query, { model: Blocks }).then(function(prices) {
+    for (let row of prices) {
+      /* if date is 8 FEB, set it to 23 FEB
+       * just to beautify a little chart, because PoS diff adjustment
+       * started only after 4895 block */
+      if (row.datetime == 1454954535) {
+        row.datetime = 1456228800;
+      }
+      sbits.push([row.datetime * 1000, row.sbits]);
     }
-    result = {
-      sbits: sbits,
-      poolsize: poolsize
-    };
+    PosAvg.findAll({order: 'timestamp ASC'}).then(function(data) {
+      for (let day of data) {
+        poolsize.push([day.timestamp * 1000, day.poolsize_max]);
+      }
+      result = {
+        sbits: sbits,
+        poolsize: poolsize
+      };
 
-    res.status(200).json(result);
+      res.status(200).json(result);
+    }).catch(function(err) {
+      console.log(err);
+      res.status(500).json({error : true});
+    });
   }).catch(function(err) {
     console.log(err);
+    res.status(500).json({error : true});
   });
 });
 
