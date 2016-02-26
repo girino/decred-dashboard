@@ -1,10 +1,10 @@
 $(function() {
 
   updateStats(true);
-  setInterval(updateStats(false), 60000);
+  setInterval(updateStats, 60000);
 
   function updateStats(isStartup) {
-
+    
     var nonce = (new Date()).getTime();
     $.ajax({
       url : '/api/v1/get_stats?'+nonce,
@@ -22,7 +22,7 @@ $(function() {
           } else {
             $('span.stats-lastprice')
               .html('$' + usd_last + '<i class="glyphicon glyphicon-arrow-down"></i>')
-              .css('color', '#C1314A');
+              .css('color', 'rgb(220, 42, 42)');
           }
 
           var usd_low = (response.btc_low * response.usd_price).toString().substr(0,4);
@@ -38,7 +38,7 @@ $(function() {
           } else {
             $('span.stats-btc')
               .html(response.btc_last + '<i class="glyphicon glyphicon-arrow-down"></i>')
-              .css('color', '#C1314A');
+              .css('color', 'rgb(220, 42, 42)');
           }
 
           $('span.stats-btc-usd').text('$' + response.usd_price);
@@ -76,7 +76,7 @@ $(function() {
           $('div.hint-pos').html(html);
 
           var est_pos_blocks = 144 - (response.blocks % 144);
-          var est_pos_time = secondsToTime(est_pos_blocks * average_time);
+          var est_pos_time = secondsToTime(est_pos_blocks * response.average_time);
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
