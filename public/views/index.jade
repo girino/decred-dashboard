@@ -97,6 +97,26 @@ html(lang='en')
             span.stats-title Estimated PoS price
             h5.est-pos-price
         .col-xs-12.col-md-6.hint-pos
+      .row.reward-hints(style="display: none;")
+        .col-xs-6.col-md-3
+          .hint.hint-red.hint-md
+            span.stats-title Block reward
+            h5.block-reward
+            p.pow-block-reward
+            p.pos-block-reward
+            p.dev-block-reward
+        .col-xs-6.col-md-3
+          .hint.hint-blue.hint-md
+            span.stats-title Reward adjustment
+            h5.est-reward-time
+            h5.est-reward-blocks
+        .col-xs-6.col-md-3
+          .hint.hint-blue.hint-md
+            span.stats-title Next block reward
+            h5.est-block-reward
+            p.est-pow-block-reward
+            p.est-pos-block-reward
+            p.est-dev-block-reward
 
       .row
         .col-xs-12.col-md-6.mobile-top-chart

@@ -92,12 +92,24 @@ p span.text-black {
   min-height: 171px;
 }
 
+.reward-hints .hint-md {
+  min-height: 195px;
+}
+
 .hint-red {
   border-left-color: #ce4844;
 }
 
+.hint-red span b {
+  color: #ce4844;
+}
+
 .hint-blue {
   border-left-color: #1b809e;
+}
+
+.hint-blue span b {
+  color: #1b809e;
 }
 
 .hint h5 {
@@ -105,6 +117,10 @@ p span.text-black {
   color: #333;
   /* color: #CE4844; */
   font-weight: 300;
+}
+
+.est-block-reward {
+  color: #7B7B7B;
 }
 
 sup {

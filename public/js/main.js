@@ -4,7 +4,7 @@ $(function() {
   setInterval(updateStats, 60000);
 
   function updateStats(isStartup) {
-    
+
     var nonce = (new Date()).getTime();
     $.ajax({
       url : '/api/v1/get_stats?'+nonce,
@@ -82,6 +82,23 @@ $(function() {
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
           $('.est-pos-price').html('~ <b>¯\_(ツ)_/¯</b> <sup>beta</sup>');
 
+          var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1);
+          $('.block-reward').html(block_reward + ' DCR');
+          $('.pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + block_reward * 0.6 + ' DCR');
+          $('.pos-block-reward').html('<span><b>PoS vote</span></b>: ' + block_reward * 0.3 / 5 + ' DCR');
+          $('.dev-block-reward').html('<span><b>Dev fee</span></b>: ' + block_reward * 0.1 + ' DCR');
+
+          var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144));
+          $('.est-block-reward').html(next_block_subsidy + ' DCR');
+          $('.est-pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + next_block_subsidy * 0.6 + ' DCR');
+          $('.est-pos-block-reward').html('<span><b>PoS vote</span></b>: ' + next_block_subsidy * 0.3 / 5 + ' DCR');
+          $('.est-dev-block-reward').html('<span><b>Dev fee</span></b>: ' + next_block_subsidy * 0.1 + ' DCR');
+
+          var est_subsidy_blocks = 6144 - (response.blocks % 6144);
+          var est_subsidy_time = secondsToTime(est_subsidy_blocks * response.average_time);
+          $('.est-reward-time').html('in '+est_subsidy_time.hours+' hours '+est_subsidy_time.minutes+' minutes');
+          $('.est-reward-blocks').html('<b>' + est_subsidy_blocks + '</b> blocks left');
+
           /* Mempool fees */
           $('b.avg-fee').html(avg_fee + ' DCR');
           $('b.max-fee').html(max_fee + ' DCR');
@@ -142,6 +159,15 @@ $(function () {
       $("text:contains(Highcharts.com)").remove();
     }, 2000);
 });
+
+function getEstimatedBlockReward(cycles, reward) {
+  if (cycles) {
+    reward = reward * 100/101;
+    getEstimatedBlockReward(cycles - 1, reward);
+  } else {
+    return reward;
+  }
+}
 
 function numberFormat(number) {
     return number.toString().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ');
