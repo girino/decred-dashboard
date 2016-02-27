@@ -236,7 +236,7 @@ function getPrices(next) {
 function findNewBlock(height) {
   exec("bash ./parseblocks.sh " + height, function(error, stdout, stderr) {
     if (error || stderr) {
-      console.error(error, stderr); return;
+      return;
     }
 
     var data = JSON.parse(stdout);
