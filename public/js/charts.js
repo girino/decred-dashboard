@@ -360,7 +360,7 @@ $(function () {
                 name: 'Votes',
                 colorByPoint: true,
                 data: [{
-                    name: 'Devs Premine',
+                    name: 'Dev Premine',
                     y: 840000,
                     color: '#3498DB'
                 }, {
@@ -376,7 +376,7 @@ $(function () {
                     y: Math.floor(data.pos),
                     color: '#E7A03C'
                 }, {
-                    name: 'Dev fees',
+                    name: 'Dev subsidy',
                     y: Math.floor(data.devs),
                     color: '#67B8D6'
                 }]
