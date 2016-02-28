@@ -2,9 +2,13 @@ body {
   background: #f2f2f0;
 }
 
-#navbar .navbar-brand {
+nav .navbar-brand {
   padding: 5px 15px;
   height: 40px;
+}
+
+nav .navbar-toggle {
+  padding: 4px 10px;
 }
 
 nav.navbar {
