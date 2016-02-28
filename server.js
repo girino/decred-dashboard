@@ -63,8 +63,12 @@ new CronJob('0 */1 * * * *', function() {
       return;
     } else {
       Stats.findOrCreate({where : {id : 1}, defaults : result }).spread(function(stats, created) {
-        stats.update(result).catch(function(err) {
-          console.error(err);
+        let query = 'SELECT AVG(DISTINCT(sbits)) as sbits FROM blocks';
+        sequelize.query(query, { model: Blocks }).then(function(avg_sbits) {
+          result.avg_sbits = avg_sbits;
+          stats.update(result).catch(function(err) {
+            console.error(err);
+          });
         });
       }).catch(function(err) {
         console.error(err);
