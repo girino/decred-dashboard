@@ -69,9 +69,9 @@ $(function() {
           /* PoS tickets */
           var html = '';
           if (response.sbits <= response.avg_sbits) {
-            html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits+' DCR. <br> Hurry to take the best price.</p></div>';
+            html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price.</p></div>';
           } else {
-            html = html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is very high compared with average price '+response.avg_sbits+' DCR and all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+            html = html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is very high compared with average price '+response.avg_sbits.toString().substr(0,4)+' DCR and all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
           }
           $('div.hint-pos').html(html);
 
