@@ -4,6 +4,11 @@ body {
 
 #navbar .navbar-brand {
   padding: 5px 15px;
+  height: 40px;
+}
+
+nav.navbar {
+  min-height: 40px;
 }
 
 .navbar-inverse {
@@ -11,8 +16,24 @@ body {
   border-color: #373737;
 }
 
+.navbar-brand img {
+  width: 30px;
+}
+
+.navbar-brand img:hover {
+  opacity: 0.8;
+}
+
 .navbar-inverse .navbar-nav>li>a {
     color: #FFFFFF;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+    color: #CCCCCC;
 }
 
 .row {

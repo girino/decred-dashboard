@@ -86,7 +86,7 @@ $(function() {
           $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');
           $('.pow-block-reward').html('<span class="hidden-xs"><b>PoW-reward</b>: </span><span class="visible-xs-block"><b>PoW</b>: </span>' + (block_reward * 0.6).toString().substr(0,6) + ' DCR');
           $('.pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (block_reward * 0.3 / 5).toString().substr(0,6) + ' DCR');
-          $('.dev-block-reward').html('<span class="hidden-xs"><b>Dev subsidy</b>: </span><span class="visible-xs-block"><b>Devs</b>: ' + (block_reward * 0.1).toString().substr(0,6) + ' DCR');
+          $('.dev-block-reward').html('<span class="hidden-xs"><b>Dev subsidy</b>: </span><span class="visible-xs-block"><b>Devs</b>: </span>' + (block_reward * 0.1).toString().substr(0,6) + ' DCR');
 
           var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144), response.reward);
           $('.est-block-reward').html(next_block_subsidy.toString().substr(0,5) + ' DCR');

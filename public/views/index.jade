@@ -24,14 +24,16 @@ html(lang='en')
     nav.navbar.navbar-inverse(style='border-radius: 0;')
       .container
         #navbar
-          ul.nav.navbar-nav.navbar-right(style='display: none;')
+          .navbar-header
+            a.navbar-brand(href="/")
+              img(src="img/decred-logo.png", width="30")
+          ul.nav.navbar-nav.navbar-right
             li
-              a(href='#')
-                | Blog
+              a(href='/help')
+                | FAQ
             li
-              a(href='#')
-                span(style='margin-right: 5px;') Chat
-                span.badge(style='background: #ba2121;font-weight: 300;') 50
+              a(href='https://forum.decred.org', target="_blank")
+                | Official Forum
     .container
       .row
         .col-xs-6.col-md-3
