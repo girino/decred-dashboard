@@ -29,7 +29,7 @@ Migrate database (if you will not specify NODE_ENV, sequelize will use configs f
 ```
 NODE_ENV=production sequelize db:migrate
 ```
-To get new data application use some of the dcrctl commands, executing them with the ('child_process').exec().
+Application use some of the dcrctl commands to get new data, executing them with the ('child_process').exec().
 
 Probably you need to check this commands and specify full path to dcrctl and all necessary flags, if you didn't yet configure everything on your machine.
 Check server.js file:

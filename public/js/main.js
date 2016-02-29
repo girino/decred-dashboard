@@ -71,7 +71,7 @@ $(function() {
           if (response.sbits <= response.avg_sbits) {
             html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price.</p></div>';
           } else {
-            html = html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is very high compared with average price '+response.avg_sbits.toString().substr(0,4)+' DCR and all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than average price '+response.avg_sbits.toString().substr(0,4)+' DCR and all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
           }
           $('div.hint-pos').html(html);
 
@@ -90,9 +90,6 @@ $(function() {
 
           var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144), response.reward);
           $('.est-block-reward').html(next_block_subsidy.toString().substr(0,5) + ' DCR');
-          //$('.est-pow-block-reward').html('<span><b>PoW-reward</span></b>: ' + (next_block_subsidy * 0.6).toString().substr(0,6) + ' DCR');
-          //$('.est-pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (next_block_subsidy * 0.3 / 5).toString().substr(0,6) + ' DCR');
-          //$('.est-dev-block-reward').html('<span><b>Dev fee</span></b>: ' + (next_block_subsidy * 0.1).toString().substr(0,6) + ' DCR');
 
           var est_subsidy_blocks = 6144 - (response.blocks % 6144);
           var est_subsidy_time = secondsToTime(est_subsidy_blocks * response.average_time);
