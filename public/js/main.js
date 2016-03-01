@@ -58,6 +58,7 @@ $(function() {
             ticket_price = Math.round((ticket_price + 0.01) * 100) / 100;
           }
 
+          //$('span.real-pos-price').attr('title', response.sbits + ' DCR');
           $('span.stats-ticketprice').html(ticket_price + ' <span class="hidden-xs">DCR</span>');
           $('span.stats-poolsize').html(numberFormat(response.poolsize));
           $('span.stats-mempool').html(numberFormat(response.pooledtx));
@@ -141,6 +142,8 @@ $(function() {
 
 
 $(function () {
+
+    $('.glyphicon-question-sign').tooltip();
 
     $.ajax({
       url: '/api/v1/pos',

@@ -98,6 +98,11 @@ p span.text-black {
   border: 1px solid #EAEAEA;
 }
 
+.stats-block .glyphicon-question-sign {
+  float: right;
+  color: #848484;
+}
+
 .stats-title {
   font-weight: 700;
   font-size: 14px;

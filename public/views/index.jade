@@ -43,6 +43,7 @@ html(lang='en')
       .row
         .col-xs-6.col-md-3
           p.stats-block
+            span.glyphicon.glyphicon-question-sign(title="Price based on data from Bittrex + BTC-E")
             span.stats-title Last price:
             span.stats-content.stats-lastprice -
         .col-xs-6.col-md-3
@@ -55,6 +56,7 @@ html(lang='en')
             span.stats-content.stats-dayhigh.text-black -
         .col-xs-6.col-md-3
           p.stats-block
+            span.glyphicon.glyphicon-question-sign(title="Last price on Bittrex")
             span.stats-title DCR / BTC
             span.stats-content.stats-btc -
       .row
@@ -78,6 +80,7 @@ html(lang='en')
       .row
         .col-xs-6.col-md-3
           p.stats-block
+            //span.real-pos-price.glyphicon.glyphicon-question-sign(title="")
             span.stats-title Ticket Price:
             span.stats-content.stats-ticketprice -
         .col-xs-6.col-md-3
@@ -137,6 +140,11 @@ html(lang='en')
               | . Usually we don't suggest to set fees higher than average. However if you want to be sure that your transactions will be included in the next block, you can set fee a little higher than current max.
       .row
         .col-xs-12.col-sm-12
+          //- .chart_controls(style="margin-bottom: 10px;")
+          //-   a.btn.btn-default(href='#', period='1d') Day
+          //-   a.btn.btn-default(href='#', period='7d') Week
+          //-   a.btn.btn-default(href='#', period='1m') Month
+          //-   a.btn.btn-default.btn-info(href='#', period='1y') Year
           #price-chart.chart-container
       .row
         .col-xs-12.col-sm-12
