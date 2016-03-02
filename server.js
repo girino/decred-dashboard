@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var exec    = require('child_process').exec;
 var CronJob = require('cron').CronJob;
 var fs = require('fs');
+var marked = require('marked');
 
 var env = process.env.NODE_ENV || 'development';
 var app = express();
@@ -83,6 +84,23 @@ new CronJob('0 */15 * * * *', function() {
 
 app.get('/', function (req, res) {
   res.render('index', {env : env});
+});
+
+app.get('/articles', function(req, res) {
+  res.render('news', {env : env});
+});
+
+app.get('/articles/:uri', function(req, res) {
+  var uri = req.params.uri;
+  fs.readFile('./public/articles/' + uri + '.md', 'utf8', function(err, data) {
+    if (err) {
+      console.error('Page not found: ', uri);
+      res.render('404');
+    } else {
+      var content = marked(data);
+      res.render('article', {content : content, uri : uri});
+    }
+  });
 });
 
 app.get('/api/v1/pos', function (req, res) {
@@ -191,9 +209,14 @@ app.get('/api/v1/get_stats', function (req, res) {
 function getPrices(next) {
   exec("dcrctl getmininginfo", function(error, stdout, stderr) {
     if (error || stderr) {
-      console.error(error, stderr); return(error, null);
+      console.error(error, stderr); return next(error, null);
     }
-    var data = JSON.parse(stdout);
+    try {
+      var data = JSON.parse(stdout);
+    } catch(e) {
+      console.log('dcrctl getmininginfo error');
+      return next(e,null);
+    }
     var result = {
       blocks : data.blocks,
       difficulty: data.difficulty,
@@ -204,8 +227,18 @@ function getPrices(next) {
     request(BITTREX, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         
-        data = JSON.parse(body);
+        try {
+          data = JSON.parse(body);
+        } catch(e) {
+          return next(e,null);
+        }
+
         data = data.result[0];
+
+        if (!data) {
+          console.log('Bittrex error');
+          return next(body,null);
+        }
 
         result.btc_high = data['High'];
         result.btc_low = data['Low'];
@@ -217,20 +250,30 @@ function getPrices(next) {
 
         request(BTCE, function (error, response, body) {
           if (!error && response.statusCode == 200) {
-            data = JSON.parse(body);
-            data = data.btc_usd;
-            result.usd_price = data.last;
             
+            try {
+              data = JSON.parse(body);
+            } catch(e) {
+              console.log('BTC-E error');
+              return next(e,null);
+            }
+
+            data = data.btc_usd;
+            if (!data) {
+              return next(body,null);
+            }
+
+            result.usd_price = data.last;
             console.log('Step 3', result);
 
             return next(null, result);
           } else {
-            console.error(error); return(error, null);
+            console.error(error); return next(error, null);
           }
         });
 
       } else {
-        console.error(error); return(error, null);
+        console.error(error); return next(error, null);
       }
     });
 

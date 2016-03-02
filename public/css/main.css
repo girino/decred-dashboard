@@ -213,3 +213,74 @@ footer a:active {
 footer div.pluso .pluso-wrap a {
   margin: 3px 3px 0 0;
 }
+
+/* blog */
+body.news {
+  background: #fff;
+}
+
+.articles-list h2 {
+  color: #aaa;
+}
+
+.articles-list h3 a {
+  text-decoration: underline;
+  color: #444;
+}
+
+.article,
+.fb-comments {
+  max-width: 700px;
+  min-width: 300px;
+  margin: 0 auto;
+}
+
+.container .row .fb-comments,
+.container .row .fb_iframe_widget {
+  display: block;
+}
+
+.article h1 {
+  margin-bottom: 10px;
+}
+
+.article p {
+  color: #333;
+  font-family: news-content-serif-font,Georgia,Cambria,"Times New Roman",Times,serif;
+  letter-spacing: .01rem;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 21px;
+  line-height: 1.58;
+  letter-spacing: -.003em;
+  margin-top: 29px;
+}
+
+/* 404 page */
+body.not-found-page {
+  background: #333;
+  color: #fff;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.row div.not-found-page {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.row div.not-found-page h1 {
+  font-size: 152px;
+  line-height: 160px;
+  padding: 0;
+  margin: 0;
+}
+
+.row div.not-found-page h2 {
+  font-size: 32px;
+}
+
+.row div.not-found-page h3 a {
+  color: #54D5FF;
+  text-decoration: underline;
+}
+/* 404 page end */
