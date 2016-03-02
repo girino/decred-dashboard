@@ -107,8 +107,19 @@ app.get('/api/v1/pos', function (req, res) {
   var result = {};
   var poolsize = [];
   var sbits = [];
-  let query = `SELECT DISTINCT(sbits), MIN(datetime) as datetime
-               from blocks group by sbits order by datetime asc`;
+  if (!req.query.time || req.query.time == '365') {
+    var query = `SELECT DISTINCT(sbits), MIN(datetime) as datetime
+             from blocks group by sbits order by datetime asc`;
+  } else {
+    var day = parseInt(req.query.time);
+    if (isNaN(day)) { 
+      day = 365;
+    }
+    var datetime = Math.floor((new Date()) / 1000) - day * 24 * 60 * 60;
+    var query = `SELECT DISTINCT(sbits), MIN(datetime) as datetime
+             from blocks ` + `WHERE datetime >= ` + datetime + ` group by sbits order by datetime asc`;
+  }
+
   sequelize.query(query, { model: Blocks }).then(function(prices) {
     for (let row of prices) {
       /* if date is 8 FEB, set it to 23 FEB
@@ -119,20 +130,55 @@ app.get('/api/v1/pos', function (req, res) {
       }
       sbits.push([row.datetime * 1000, row.sbits]);
     }
-    PosAvg.findAll({order: 'timestamp ASC'}).then(function(data) {
-      for (let day of data) {
-        poolsize.push([day.timestamp * 1000, day.poolsize_max]);
-      }
-      result = {
-        sbits: sbits,
-        poolsize: poolsize
-      };
-
+    if (req.query.data == "sbits") {
+      result.sbits = sbits;
       res.status(200).json(result);
-    }).catch(function(err) {
-      console.log(err);
-      res.status(500).json({error : true});
-    });
+      return;
+    }
+    /* TODO: refactoring! */
+    if (req.query.time == '7') {
+
+      var sbits_query = {order: 'datetime ASC'};
+      if (day) {
+        sbits_query.where = {datetime: {$gt : day}};
+      }
+      Blocks.findAll(sbits_query).then(function(data) {
+        for (let day of data) {
+          poolsize.push([day.datetime * 1000, day.poolsize]);
+        }
+        result = {
+          sbits: sbits,
+          poolsize: poolsize
+        };
+
+        res.status(200).json(result);
+      }).catch(function(err) {
+        console.log(err);
+        res.status(500).json({error : true});
+      });
+
+    } else {
+
+      var sbits_query = {order: 'timestamp ASC'};
+      if (day) {
+        sbits_query.where = {timestamp: {$gt : day}};
+      }
+      PosAvg.findAll(sbits_query).then(function(data) {
+        for (let day of data) {
+          poolsize.push([day.timestamp * 1000, day.poolsize_max]);
+        }
+        result = {
+          sbits: sbits,
+          poolsize: poolsize
+        };
+
+        res.status(200).json(result);
+      }).catch(function(err) {
+        console.log(err);
+        res.status(500).json({error : true});
+      });
+
+    }
   }).catch(function(err) {
     console.log(err);
     res.status(500).json({error : true});

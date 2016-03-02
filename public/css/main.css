@@ -2,6 +2,16 @@ body {
   background: #f2f2f0;
 }
 
+.btn:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.btn:focus {
+  outline: none !important;
+}
+
 nav .navbar-brand {
   padding: 5px 15px;
   height: 40px;
@@ -73,6 +83,23 @@ p span.text-black {
   .reward-hints .hint-sm {
       min-height: 221px !important;
   }
+}
+
+.btn-toolbar {
+  margin-bottom: 10px;
+}
+
+.btn-toolbar button {
+  background: #f2f2f2;
+}
+
+.btn-toolbar button.active,
+.btn-toolbar button:hover,
+.btn-toolbar button:focus {
+  background: #B9B9B9;
+  border: 1px solid #B9B9B9;
+  color: #fff;
+  font-weight: 300;
 }
 
 .chart-container {

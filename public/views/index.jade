@@ -137,17 +137,28 @@ html(lang='en')
               | . Usually we don't suggest to set fees higher than average. However if you want to be sure that your transactions will be included in the next block, you can set fee a little higher than current max.
       .row
         .col-xs-12.col-sm-12
-          //- .chart_controls(style="margin-bottom: 10px;")
-          //-   a.btn.btn-default(href='#', period='1d') Day
-          //-   a.btn.btn-default(href='#', period='7d') Week
-          //-   a.btn.btn-default(href='#', period='1m') Month
-          //-   a.btn.btn-default.btn-info(href='#', period='1y') Year
           #price-chart.chart-container
       .row
         .col-xs-12.col-sm-12
+          .btn-toolbar(role='toolbar')
+            .btn-group
+              button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="poolsize")
+                span Week
+              button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="poolsize")
+                span Month
+              button.btn-chart.btn.btn-default.active(type='button', data-period="365", data-chart="poolsize")
+                span Year
           #pos-poolsize.chart-container
       .row
         .col-xs-12.col-sm-12
+          .btn-toolbar(role='toolbar')
+            .btn-group
+              button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="sbits")
+                span Week
+              button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="sbits")
+                span Month
+              button.btn-chart.btn.btn-default.active(type='button', data-period="365", data-chart="sbits")
+                span Year
           #pos-sbits.chart-container
     footer
       div.pull-left

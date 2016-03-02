@@ -145,6 +145,34 @@ $(function () {
 
     $('.glyphicon-question-sign').tooltip();
 
+    $('.btn-chart').on('click', function(e) {
+      e.preventDefault();
+      var $this = $(this);
+      var time = $this.data('period');
+      var chart = $this.data('chart');
+
+      $this.parent().find('button').each(function(item) { $(this).removeClass('active'); });
+      $this.addClass('active');
+
+      $.ajax({
+        url: '/api/v1/pos?data='+chart+'&time='+time,
+        type: 'GET',
+        dataType: "json",
+        success: function (data) {
+          if (chart == 'poolsize') {
+            drawPoolsize(data.poolsize);
+          }
+          if (chart == 'sbits') {
+            drawSbits(data.sbits);
+          }
+          setTimeout(function(){
+            $('.highcharts-button').remove();
+            $("text:contains(Highcharts.com)").remove();
+          }, 1000);
+        }
+      });      
+    });
+
     $.ajax({
       url: '/api/v1/pos',
       type: 'GET',
