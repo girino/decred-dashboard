@@ -103,6 +103,7 @@ p span.text-black {
 }
 
 .chart-container {
+  min-height: 400px;
   margin: 0 auto;
 }
 

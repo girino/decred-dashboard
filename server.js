@@ -140,7 +140,7 @@ app.get('/api/v1/pos', function (req, res) {
 
       var sbits_query = {order: 'datetime ASC'};
       if (day) {
-        sbits_query.where = {datetime: {$gt : day}};
+        sbits_query.where = {datetime: {$gt : datetime}};
       }
       Blocks.findAll(sbits_query).then(function(data) {
         for (let day of data) {
