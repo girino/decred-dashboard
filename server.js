@@ -449,7 +449,7 @@ function parseSStx(sstx, next) {
         console.error(error)
         return next(error, null);
       }
-      console.log('Parsing SStx transaction ' + counter ' of ' + sstx.length + ': ' + tx);
+      console.log('Parsing SStx transaction ' + counter + ' of ' + sstx.length + ': ' + tx);
       try {
         let data = JSON.parse(stdout);
         data = data.vout[1].scriptPubKey.asm;
