@@ -452,7 +452,12 @@ function parseSStx(sstx, next) {
       console.log('Parsing SStx transaction ' + counter + ' of ' + sstx.length + ': ' + tx);
       try {
         var data = JSON.parse(stdout);
-        data = data.vout[1].scriptPubKey.asm;
+        // is ticket revoked?
+        if (data.vout[1]) {
+          data = data.vout[1].scriptPubKey.asm;
+        } else {
+          data = null;
+        }
       } catch(e) {
         return next(e, null);
       }
