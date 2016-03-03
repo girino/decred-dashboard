@@ -364,7 +364,7 @@ function findNewBlock(height) {
               if (err) {
                 console.error(err);
               }
-              
+
               row.update({yes_votes : yes_votes}).catch(function(err) {
                 console.log(err);
               });
@@ -449,10 +449,13 @@ function parseSStx(sstx, next) {
         console.error(error)
         return next(error, null);
       }
-      console.log('Parsing SStx transaction');
-
-      let data = JSON.parse(stdout);
-      data = data.vout[1].scriptPubKey.asm;
+      console.log('Parsing SStx transaction ' + counter ' of ' + sstx.length + ': ' + tx);
+      try {
+        let data = JSON.parse(stdout);
+        data = data.vout[1].scriptPubKey.asm;
+      } catch(e) {
+        return next(e, null);
+      }
       if (data) {
         data = data.replace('OP_RETURN ', '')
         if (data.length === 4) {
@@ -468,6 +471,7 @@ function parseSStx(sstx, next) {
         console.log('Total YES votes: ' + yes_votes);
         return next(null, yes_votes);
       }
+      counter++;
     });
   }
 }
