@@ -24,6 +24,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    yes_votes: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    num_tickets: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     poolsize: {
       type: DataTypes.INTEGER,
       allowNull: false

@@ -9,6 +9,14 @@ var CronJob = require('cron').CronJob;
 var fs = require('fs');
 var marked = require('marked');
 
+if (env == 'production') {
+  var memwatch = require('memwatch-next');
+  memwatch.on('leak', function(info) {
+    console.log('Wow! Memory leak detected.');
+    console.dir(info);
+  });
+}
+
 var env = process.env.NODE_ENV || 'development';
 var app = express();
 app.set('views', './public/views');
@@ -340,7 +348,8 @@ function findNewBlock(height) {
       voters: data.voters,
       poolsize: data.poolsize,
       sbits: data.sbits,
-      difficulty: data.difficulty
+      difficulty: data.difficulty,
+      num_tickets: data.freshstake
     };
 
     Blocks.findOrCreate({where: {hash : insert.hash}, defaults: insert})
@@ -348,8 +357,20 @@ function findNewBlock(height) {
         if (created) {
           console.log('New block was added, height: ' + height);
           updateDailyAveragePoS(row.datetime, row.poolsize, row.sbits, function(err, updated) {
-            if (err) console.error(err);
-            findNewBlock(height + 1);
+            if (err) {
+              console.error(err);
+            }
+            parseSStx(data.stx, function(err, yes_votes) {
+              if (err) {
+                console.error(err);
+              }
+              
+              row.update({yes_votes : yes_votes}).catch(function(err) {
+                console.log(err);
+              });
+
+              findNewBlock(height + 1);
+            });
           });
         } else {
           console.log('No new blocks found');
@@ -417,6 +438,38 @@ function updateDailyAveragePoS (timestamp, new_poolsize, new_sbits, next) {
       });
   });
   });
+}
+
+function parseSStx(sstx, next) {
+  var yes_votes = 0;
+  var counter = 1;
+  for (let tx of sstx) {
+    exec("bash ./parsesstx.sh " + tx, function(error, stdout, stderr) {
+      if (error || stderr) {
+        console.error(error)
+        return next(error, null);
+      }
+      console.log('Parsing SStx transaction');
+
+      let data = JSON.parse(stdout);
+      data = data.vout[1].scriptPubKey.asm;
+      if (data) {
+        data = data.replace('OP_RETURN ', '')
+        if (data.length === 4) {
+          if (data === '0100') {
+            yes_votes++;
+            console.log('Vote is YES');
+          } else if (data === '0000') {
+            console.log('Vote is NO');
+          }
+        }
+      }
+      if (counter >= sstx.length) {
+        console.log('Total YES votes: ' + yes_votes);
+        return next(null, yes_votes);
+      }
+    });
+  }
 }
 
 function calculateAvgFees() {
