@@ -451,7 +451,7 @@ function parseSStx(sstx, next) {
       }
       console.log('Parsing SStx transaction ' + counter + ' of ' + sstx.length + ': ' + tx);
       try {
-        let data = JSON.parse(stdout);
+        var data = JSON.parse(stdout);
         data = data.vout[1].scriptPubKey.asm;
       } catch(e) {
         return next(e, null);
