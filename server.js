@@ -8,12 +8,16 @@ var exec    = require('child_process').exec;
 var CronJob = require('cron').CronJob;
 var fs = require('fs');
 var marked = require('marked');
+var memwatch = require('memwatch-next');
 
 if (env == 'production') {
-  var memwatch = require('memwatch-next');
   memwatch.on('leak', function(info) {
     console.log('Wow! Memory leak detected.');
     console.dir(info);
+  });
+  memwatch.on('stats', function(stats) {
+    console.log('Memory stats:');
+    console.dir(stats);
   });
 }
 
@@ -37,7 +41,6 @@ var Stats = require('./models').Stats;
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
 const MARKET_CAP = 'https://api.coinmarketcap.com/v1/datapoints/decred/';
-const GET_TX = 'https://mainnet.decred.org/api/tx/';
 
 const SUPPLY = 21000000;
 const FIRST_BLOCK_TIME = 1454954535;
@@ -518,13 +521,27 @@ function getAllTransactions(counter, data, result, next) {
     max_fees = arguments[4];
   }
   if (counter < data.length) {
-    request(GET_TX + data[counter], function (error, response, body) {
-      if (!error && response.statusCode == 200) {
+    exec("dcrctl getrawtransaction " + data[counter], function(error, stdout, stderr) {
+      if (error || stderr) {
+          var hash = data[counter];
+          data = data.filter(function(value) { return hash != value; });
+          console.log('getrawtransaction error:', error); 
+          console.log('Transaction was removed from array.');
+          return getAllTransactions(counter, data, result, next, max_fees);
+      }
+      exec("dcrctl decoderawtransaction " + stdout, function(error, stdout, stderr) {
+        if (error || stderr) {
+          var hash = data[counter];
+          data = data.filter(function(value) { return hash != value; });
+          console.log('decoderawtransaction error:', error); 
+          console.log('Transaction was removed from array.');
+          return getAllTransactions(counter, data, result, next, max_fees);
+        }
         console.log('Parse ' + (counter+1) + ' / ' + data.length + ' transaction: ' + data[counter]);
         try {
           var json = JSON.parse(body);
         } catch(e) {
-          console.error("Bad response from mainnet.decred.org", e);
+          console.error("Bad RPC-call response", e);
           return next(e, null);
         }
         
@@ -540,22 +557,8 @@ function getAllTransactions(counter, data, result, next) {
           data.shift();
         }
 
-        getAllTransactions(counter, data, result, next, max_fees);
-
-      } else {
-        /* if transaction was not found, we want to remove it from array and continue */
-        if (!error && response.statusCode == 404) {
-          var hash = data[counter];
-          data = data.filter(function(value) { return hash != value; });
-          console.log('Handle 404 response from mainnet.decred.org; Transaction was removed from array');
-          
-          getAllTransactions(counter, data, result, next, max_fees);
-        } else {
-          console.error('mainnet.decred.org responded with error:', error);
-          console.error('Status code is: ', response.statusCode);
-          return next(error,null);
-        }
-      }
+        return getAllTransactions(counter, data, result, next, max_fees);
+      });
     });
   } else {
     var fees = {};
