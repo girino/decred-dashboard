@@ -14,12 +14,12 @@ html(lang='en')
     link(rel="apple-touch-icon",href="img/apple-touch-favicon.png")
     link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
     link(href='css/bootstrap.min.css', rel='stylesheet')
-    link(href='css/main.css?v6', rel='stylesheet')
+    link(href='css/main.css?v7', rel='stylesheet')
     script(src='js/jquery.min.js')
     script(src="js/highcharts.js")
     script(src="js/exporting.js")
-    script(src='js/charts.js?v6')
-    script(src='js/main.js?v6')
+    script(src='js/charts.js?v7')
+    script(src='js/main.js?v7')
   body
     nav.navbar.navbar-inverse(style='border-radius: 0;')
       .container
@@ -137,11 +137,17 @@ html(lang='en')
               | . Usually we don't suggest to set fees higher than average. However if you want to be sure that your transactions will be included in the next block, you can set fee a little higher than current max.
       .row
         .col-xs-12.col-sm-12
+          .btn-toolbar(role='toolbar')
+            .btn-group.price-group
+              button.btn-chart.btn.btn-default(type='button', data-ticker="btc", data-chart="price")
+                span BTC
+              button.btn-chart.btn.btn-default.active(type='button', data-ticker="usd", data-chart="price")
+                span USD
           #price-chart.chart-container
       .row
         .col-xs-12.col-sm-12
           .btn-toolbar(role='toolbar')
-            .btn-group
+            .btn-group.pos-group
               button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="poolsize")
                 span Week
               button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="poolsize")
@@ -152,7 +158,7 @@ html(lang='en')
       .row
         .col-xs-12.col-sm-12
           .btn-toolbar(role='toolbar')
-            .btn-group
+            .btn-group.pos-group
               button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="sbits")
                 span Week
               button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="sbits")

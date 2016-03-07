@@ -145,7 +145,7 @@ $(function () {
 
     $('.glyphicon-question-sign').tooltip();
 
-    $('.btn-chart').on('click', function(e) {
+    $('.pos-group .btn-chart').on('click', function(e) {
       e.preventDefault();
       var $this = $(this);
       var time = $this.data('period');
@@ -165,12 +165,23 @@ $(function () {
           if (chart == 'sbits') {
             drawSbits(data.sbits);
           }
-          setTimeout(function(){
+          setTimeout(function() {
             $('.highcharts-button').remove();
             $("text:contains(Highcharts.com)").remove();
           }, 1000);
         }
       });      
+    });
+
+    $('.price-group .btn-chart').on('click', function(e) {
+      e.preventDefault();
+      var $this = $(this);
+      var ticker = $this.data('ticker');
+      var chart = $this.data('chart');
+
+      $this.parent().find('button').each(function(item) { $(this).removeClass('active'); });
+      $this.addClass('active');
+      updatePricesChart(ticker);
     });
 
     $.ajax({
@@ -183,22 +194,34 @@ $(function () {
       }
     });
 
-    $.ajax({
-      url: '/api/v1/usd_price',
-      type: 'GET',
-      dataType: "json",
-      success: function (data) {
-        if (!data.error) {
-          drawPrice(data);
-        }
-      }
-    });
+    updatePricesChart('usd');
 
     setTimeout(function(){
       $('.highcharts-button').remove();
       $("text:contains(Highcharts.com)").remove();
     }, 2000);
 });
+
+function updatePricesChart(ticker) {
+  if (ticker != 'usd' && ticker != 'btc') {
+    ticker = 'usd';
+  }
+  $.ajax({
+    url: '/api/v1/prices',
+    type: 'GET',
+    data: {ticker : ticker},
+    dataType: "json",
+    success: function (data) {
+      if (!data.error) {
+        drawPrice(data, ticker);
+          setTimeout(function() {
+            $('.highcharts-button').remove();
+            $("text:contains(Highcharts.com)").remove();
+          }, 500);
+      }
+    }
+  });
+}
 
 function getEstimatedBlockReward(cycles, reward) {
   if (cycles) {

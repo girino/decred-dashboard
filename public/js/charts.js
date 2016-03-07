@@ -1,10 +1,10 @@
-function drawPrice(data) {
+function drawPrice(data, ticker) {
   $('#price-chart').highcharts({
     chart: {
         zoomType: 'x'
     },
     title: {
-        text: 'DCR price in USD'
+        text: 'DCR price in ' + ticker.toUpperCase()
     },
     /*
     subtitle: {
@@ -17,7 +17,7 @@ function drawPrice(data) {
     },
     yAxis: {
         title: {
-            text: 'USD Exchange rate'
+            text: ticker.toUpperCase() + ' Exchange rate'
         }
     },
     legend: {

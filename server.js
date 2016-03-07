@@ -198,8 +198,14 @@ app.get('/api/v1/pos', function (req, res) {
   });
 });
 
-app.get('/api/v1/usd_price', function (req, res) {
-  fs.readFile('./uploads/usd_price.json', 'utf8', function (err, data) {
+app.get('/api/v1/prices', function (req, res) {
+  var ticker = req.query.ticker;
+
+  if (ticker != 'btc' && ticker != 'usd') {
+    res.status(500).json({error : true}); 
+    return;
+  }
+  fs.readFile('./uploads/prices.json', 'utf8', function (err, data) {
     if (err) {
       console.log(err);
       res.status(500).json({error : true}); return;
@@ -211,7 +217,11 @@ app.get('/api/v1/usd_price', function (req, res) {
       res.status(500).json({error : true});
       return;
     }
-    res.status(200).json(result.usd_price);
+    if (ticker === 'usd') {
+      res.status(200).json(result.usd_price);
+    } else {
+      res.status(200).json(result.btc_price);
+    }
   });
 });
 
@@ -612,16 +622,17 @@ function checkMissedTickets() {
 }
 
 function updateMarketCap() {
-  console.log('Updating USD market price.');
+  console.log('Updating USD, BTC market price.');
   request(MARKET_CAP, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       try {
         let json = JSON.parse(body);
-        fs.writeFile("./uploads/usd_price.json", JSON.stringify({usd_price : json.price_usd}), function(err) {
+        json = JSON.stringify({usd_price : json.price_usd, btc_price : json.price_btc});
+        fs.writeFile("./uploads/prices.json", json, function(err) {
             if(err) {
                 return console.error(err);
             }
-            return console.log("USD market price updated.");
+            return console.log("USD,BTC market price updated.");
         });
 
       } catch(e) {
