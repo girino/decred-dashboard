@@ -41,6 +41,7 @@ var sequelize = require('./models').sequelize;
 var Blocks = require('./models').Blocks;
 var PosAvg = require('./models').PosAvg;
 var Stats = require('./models').Stats;
+var Hashrate = require('../models').Hashrate;
 
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
@@ -100,6 +101,19 @@ new CronJob('0 */15 * * * *', function() {
 
   /* Calculate average fees in the mempool */
   calculateAvgFees();
+}, null, true, 'Europe/Rome');
+
+new CronJob('0 */15 * * * *', function() {
+  /* Get prices in USD */
+  updateMarketCap();
+
+  /* Calculate average fees in the mempool */
+  calculateAvgFees();
+}, null, true, 'Europe/Rome');
+
+/* Save network hashrate each hour */
+new CronJob('0 * * * * *', function() {
+  saveNetworkHashrate();
 }, null, true, 'Europe/Rome');
 
 function getPrices(next) {
@@ -466,6 +480,24 @@ function updateMarketCap() {
         console.error('updateMarketCap: ', e); return;
       }
     }
+  });
+}
+
+function saveNetworkHashrate() {
+  exec("dcrctl getmininginfo", function(error, stdout, stderr) {
+    try {
+      var data = JSON.parse(stdout);
+    } catch(e) {
+      console.error("Error getmininginfo", e);
+      return;
+    }
+
+    var timestamp = Math.floor(new Date() / 1000);
+    Hashrate.create({timestamp : timestamp, hashrate : data.networkhashps}).then(function(row) {
+      console.log('New network hashrate has been saved:', data.networkhashps);
+    }).catch(function(err) {
+      console.error(err); return;
+    })
   });
 }
 
