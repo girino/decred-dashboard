@@ -27,7 +27,7 @@ function updatePowChart(time, chart) {
     dataType: "json",
     success: function (data) {
       if (chart == 'hashrate') {
-        drawPow(data, chart, 'Network Hashrate');
+        drawPow(data, chart, 'Network Hashrate Thash/s');
       }
       if (chart == 'difficulty') {
         drawPow(data, chart, 'PoW Difficulty');

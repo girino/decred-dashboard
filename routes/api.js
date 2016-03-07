@@ -10,6 +10,14 @@ var PosAvg = require('../models').PosAvg;
 var Stats = require('../models').Stats;
 var Hashrate = require('../models').Hashrate;
 
+const SUPPLY = 21000000;
+const FIRST_BLOCK_TIME = 1454954535;
+const SUBSIDY = 31.19582664;
+const PREMINE = 1680000;
+/* (4095 - 1) blocks * 21.83707864 DCR ~ 89401 */
+const MINED_DCR_BEFORE_POS = 89401;
+const DCR_TOTAL = PREMINE + MINED_DCR_BEFORE_POS;
+
 router.get('/pos', function (req, res) {
   var result = {};
   var poolsize = [];
@@ -120,22 +128,22 @@ router.get('/difficulty', function(req, res) {
 
 router.get('/hashrate', function(req, res) {
   if (!req.query.time || req.query.time == '365') {
-    var query = `SELECT DISTINCT(hashrate), MIN(timestamp) as timestamp
-                 from hashrate group by hashrate order by timestamp asc`;
+    var query = `SELECT DISTINCT(networkhashps), MIN(timestamp) as timestamp
+                 from hashrate group by networkhashps order by timestamp asc`;
   } else {
     var day = parseInt(req.query.time);
     if (isNaN(day)) { 
       day = 365;
     }
     var datetime = Math.floor((new Date()) / 1000) - day * 24 * 60 * 60;
-    var query = `SELECT DISTINCT(hashrate), MIN(timestamp) as timestamp
-             from hashrate ` + `WHERE timestamp >= ` + datetime + ` group by hashrate order by timestamp asc`;
+    var query = `SELECT DISTINCT(networkhashps), MIN(timestamp) as timestamp
+             from hashrate ` + `WHERE timestamp >= ` + datetime + ` group by networkhashps order by timestamp asc`;
   }
 
   sequelize.query(query, { model: Hashrate }).then(function(data) {
     var result = [];
     for (let block of data) {
-      result.push([block.datetime * 1000, block.hashrate]);
+      result.push([block.datetime * 1000, block.networkhashps / 1000 / 1000 / 1000 / 1000]);
     }
     return res.status(200).json(result);
   }).catch(function(err) {

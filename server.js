@@ -41,7 +41,7 @@ var sequelize = require('./models').sequelize;
 var Blocks = require('./models').Blocks;
 var PosAvg = require('./models').PosAvg;
 var Stats = require('./models').Stats;
-var Hashrate = require('../models').Hashrate;
+var Hashrate = require('./models').Hashrate;
 
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
@@ -111,8 +111,8 @@ new CronJob('0 */15 * * * *', function() {
   calculateAvgFees();
 }, null, true, 'Europe/Rome');
 
-/* Save network hashrate each hour */
-new CronJob('0 * * * * *', function() {
+/* Save network hashrate each 30 mins */
+new CronJob('0 */30 * * * *', function() {
   saveNetworkHashrate();
 }, null, true, 'Europe/Rome');
 
@@ -493,7 +493,7 @@ function saveNetworkHashrate() {
     }
 
     var timestamp = Math.floor(new Date() / 1000);
-    Hashrate.create({timestamp : timestamp, hashrate : data.networkhashps}).then(function(row) {
+    Hashrate.create({timestamp : timestamp, networkhashps : data.networkhashps}).then(function(row) {
       console.log('New network hashrate has been saved:', data.networkhashps);
     }).catch(function(err) {
       console.error(err); return;

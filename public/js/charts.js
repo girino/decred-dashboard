@@ -291,7 +291,6 @@ function drawPow(data, chart, title) {
     },
     plotOptions: {
         area: {
-            color: '#FFD285',
             fillColor: {
                 linearGradient: {
                     x1: 0,
@@ -308,6 +307,7 @@ function drawPow(data, chart, title) {
                 radius: 2
             },
             lineWidth: 1,
+            color: '#FFD285',
             states: {
                 hover: {
                     lineWidth: 1
@@ -316,7 +316,7 @@ function drawPow(data, chart, title) {
             threshold: null
         }
     },
-    series: [{data: data}]
+    series: [{type: 'area', data: data}]
 });
 }
 
