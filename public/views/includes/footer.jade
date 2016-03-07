@@ -1,0 +1,20 @@
+.pull-left
+  p 
+    | Contact: 
+    span
+      | info@dcrstats.com
+  p 
+    | Support project development: 
+    span
+      | Dsgm5RTerEDFQFJsr9uQ27pKQ1sfp5JZqPq
+  .pluso(data-background='transparent', data-options='medium,square,line,horizontal,counter,theme=02', data-services='twitter,facebook,google', data-title='Decred Dashboard', data-description='Decred is an open and progressive cryptocurrency with a system of community-based governance integrated into its blockchain.', data-url='https://dcrstats.com')
+.pull-right
+  p
+    | dcrstats.com is the biggest unofficial dashboard of Decred Network. It is 
+    a(href="https://github.com/Dyrk/decred-dashboard", target="_blank") open source project
+    | &nbsp;so feel free to send any improvements and bug reports on github.
+    | Here you can find plenty of decred network statistics, charts, PoS-mining hints and predictions, FAQ etc.
+    | This project is in continuous development, so feel free to contact us and ask for new functionality ;)
+script(src='js/bootstrap.min.js')
+if env == 'production'
+script(src='js/metrics.js')

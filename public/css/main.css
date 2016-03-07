@@ -23,6 +23,7 @@ nav .navbar-toggle {
 
 nav.navbar {
   min-height: 40px;
+  border-radius: 0;
 }
 
 .navbar-inverse {

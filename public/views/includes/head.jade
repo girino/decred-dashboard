@@ -1,0 +1,22 @@
+meta(charset='utf-8')
+title #{title}
+meta(http-equiv='X-UA-Compatible', content='IE=edge')
+meta(name='viewport', content='width=device-width, initial-scale=1')
+meta(name='description', content='#{desc}')
+meta(property='og:title', content='Decred Dashboard')
+meta(property='og:description', content='#{desc}')
+meta(property='og:url', content='https://dcrstats.com')
+meta(name='yandex-verification',content='4a6410aac09ce382')
+link(rel="icon",type="image/png",href="img/favicon.png")
+link(rel="apple-touch-icon",href="img/apple-touch-favicon.png")
+link(href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400", rel='stylesheet')
+link(href='css/bootstrap.min.css', rel='stylesheet')
+link(href='css/main.css?v7', rel='stylesheet')
+script(src='js/jquery.min.js')
+script(src="js/highcharts.js")
+script(src="js/exporting.js")
+script(src='js/charts.js?v7')
+if page == 'index'
+  script(src='js/main.js?v7')
+if page == 'pow'
+  script(src='js/pow.js?v7')

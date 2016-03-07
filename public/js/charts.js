@@ -275,6 +275,51 @@ function drawSbits(data) {
 });
 }
 
+function drawPow(data, chart, title) {
+  $('#pow-'+chart).highcharts({
+    chart: {
+        zoomType: 'x'
+    },
+    title: {
+        text: title
+    },
+    xAxis: {
+        type: 'datetime'
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        area: {
+            color: '#FFD285',
+            fillColor: {
+                linearGradient: {
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: 1
+                },
+                stops: [
+                    [0, '#FFD285'],
+                    [1, '#FF733F']
+                ]
+            },
+            marker: {
+                radius: 2
+            },
+            lineWidth: 1,
+            states: {
+                hover: {
+                    lineWidth: 1
+                }
+            },
+            threshold: null
+        }
+    },
+    series: [{data: data}]
+});
+}
+
 function drawVotersChart(data, missed, total) {
     $(function () {
 

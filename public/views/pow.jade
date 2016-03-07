@@ -1,0 +1,31 @@
+doctype html
+html(lang='en')
+  head
+    include ./includes/head.jade
+  body
+    include ./includes/navigation.jade
+    .container
+      .row
+        .col-xs-12.col-sm-12
+          .btn-toolbar(role='toolbar')
+            .btn-group.pow-group
+              button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="hashrate")
+                span Week
+              button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="hashrate")
+                span Month
+              button.btn-chart.btn.btn-default.active(type='button', data-period="365", data-chart="hashrate")
+                span Year
+          #pow-hashrate.chart-container
+      .row
+        .col-xs-12.col-sm-12
+          .btn-toolbar(role='toolbar')
+            .btn-group.pow-group
+              button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="difficulty")
+                span Week
+              button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="difficulty")
+                span Month
+              button.btn-chart.btn.btn-default.active(type='button', data-period="365", data-chart="difficulty")
+                span Year
+          #pow-difficulty.chart-container
+    footer
+      include ./includes/footer.jade
