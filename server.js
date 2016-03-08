@@ -42,6 +42,7 @@ var Blocks = require('./models').Blocks;
 var PosAvg = require('./models').PosAvg;
 var Stats = require('./models').Stats;
 var Hashrate = require('./models').Hashrate;
+var Pools = require('./models').Pools;
 
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
@@ -103,17 +104,13 @@ new CronJob('0 */15 * * * *', function() {
   calculateAvgFees();
 }, null, true, 'Europe/Rome');
 
-new CronJob('0 */15 * * * *', function() {
-  /* Get prices in USD */
-  updateMarketCap();
-
-  /* Calculate average fees in the mempool */
-  calculateAvgFees();
-}, null, true, 'Europe/Rome');
-
+parsePoolsHashrate();
 /* Save network hashrate each 30 mins */
+/* Parse PoW-pools */
 new CronJob('0 */30 * * * *', function() {
   saveNetworkHashrate();
+
+  parsePoolsHashrate();
 }, null, true, 'Europe/Rome');
 
 function getPrices(next) {
@@ -499,6 +496,46 @@ function saveNetworkHashrate() {
       console.error(err); return;
     })
   });
+}
+
+function parsePoolsHashrate() {
+    Pools.findAll().then(function(pools) {
+      for (let pool of pools) {
+        request(pool.url, function (error, response, body) {
+          var json = {};
+          if (!error && response.statusCode == 200) {
+            try {
+              json = JSON.parse(body);
+            } catch(e) {
+              console.error('parsePoolsHashrate: ', e); return;
+            }
+          }
+          var update = {
+            hashrate: 0,
+            workers: 0
+          };
+          if (pool.unit == 'hash' && json.decred) {
+            update = {
+              hashrate: (json.decred.hashrate / 1000 / 1000 / 1000) || 0,
+              workers: json.decred.workers || 0
+            };
+          } else if (pool.unit == 'kilohash' && json.getpoolstatus) {
+            update = {
+              hashrate: (json.getpoolstatus.data.hashrate / 1000 / 1000) || 0,
+              workers: json.getpoolstatus.data.workers || 0
+            };
+          }
+
+          pool.update(update).then(function(row) {
+            console.log('Pool '+row.name+' has been updated.');
+          }).catch(function(err) {
+            console.error(err); return;
+          })
+        });
+      }
+    }).catch(function(err) {
+      console.error(err); return;
+    })
 }
 
 app.listen(8080, function () {

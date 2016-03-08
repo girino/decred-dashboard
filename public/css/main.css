@@ -51,12 +51,21 @@ nav.navbar {
     color: #CCCCCC;
 }
 
+nav.navbar span.badge {
+  font-weight: 200;
+  background-color: #E04949;
+}
+
 .row {
   margin-bottom: 20px;
 }
 
 p span.text-black {
   color: #333;
+}
+
+table.table {
+  background: #fff;
 }
 
 @media (max-width: 768px) {

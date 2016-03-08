@@ -320,6 +320,48 @@ function drawPow(data, chart, title) {
 });
 }
 
+function drawHashrate(data) {
+    $(function () {
+
+    $(document).ready(function () {
+        // Build the chart
+        $('#hashrate-distribution').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Network Hashrate Distribution, Ghash/s'
+            },
+            subtitle: {
+                text: "Total Network Hashrate: " + data[0].network + " Ghash/s"
+            },
+            tooltip: {
+                pointFormat: '<b>{point.y} Ghash/s</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    },
+                    showInLegend: false
+                }
+            },
+            series: [{
+                name: 'Hashrate',
+                colorByPoint: true,
+                data: data
+            }]
+        });
+    });
+});
+}
+
 function drawVotersChart(data, missed, total) {
     $(function () {
 

@@ -6,6 +6,15 @@ html(lang='en')
     include ./includes/navigation.jade
     .container
       .row
+        .col-xs-12.col-md-6.mobile-top-chart
+          table#pools-table.table.chart-container
+            tr
+              th Pool
+              th Workers
+              th Hashrate
+        .col-xs-12.col-md-6
+          #hashrate-distribution.chart-container
+      .row
         .col-xs-12.col-sm-12
           .btn-toolbar(role='toolbar')
             .btn-group.pow-group

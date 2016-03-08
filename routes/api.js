@@ -9,6 +9,7 @@ var Blocks = require('../models').Blocks;
 var PosAvg = require('../models').PosAvg;
 var Stats = require('../models').Stats;
 var Hashrate = require('../models').Hashrate;
+var Pools = require('../models').Pools;
 
 const SUPPLY = 21000000;
 const FIRST_BLOCK_TIME = 1454954535;
@@ -143,12 +144,41 @@ router.get('/hashrate', function(req, res) {
   sequelize.query(query, { model: Hashrate }).then(function(data) {
     var result = [];
     for (let block of data) {
-      result.push([block.datetime * 1000, block.networkhashps / 1000 / 1000 / 1000 / 1000]);
+      result.push([block.timestamp * 1000, block.networkhashps / 1000 / 1000 / 1000 / 1000]);
     }
     return res.status(200).json(result);
   }).catch(function(err) {
     console.log(err);
     res.status(500).json({error : true});
+  });
+});
+
+router.get('/pools', function(req, res) {
+  Stats.findOne({where : {id : 1}}).then(function(stats) {
+    Pools.findAll({order: 'hashrate DESC'}).then(function(pools) {
+      var networkTotal = Math.round((stats.networkhashps / 1000 / 1000 / 1000) * 100) / 100;
+      var result = [];
+      var total = 0;
+      var hashrate = 0;
+      for (let pool of pools) {
+        total += pool.hashrate;
+        hashrate = Math.round(pool.hashrate * 100) / 100;
+        result.push({workers: pool.workers, name : pool.name, y : hashrate, network: networkTotal});
+      }
+      var soloMiners = Math.round((stats.networkhashps / 1000 / 1000 / 1000 - total) * 100) / 100;
+      result.push({
+        workers: '-', 
+        name : 'Solo miners', 
+        y : soloMiners
+      });
+      return res.status(200).json(result);
+    }).catch(function(err) {
+      console.log(err);
+      res.status(500).json({error : true}); return;
+    });
+  }).catch(function(err) {
+    console.error(err);
+    res.status(500).json({error : true}); return;
   });
 });
 
