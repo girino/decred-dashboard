@@ -7,3 +7,4 @@ snippets.js
 .DS_Store
 npm-debug.log
 uploads
+bin/node_cache.json

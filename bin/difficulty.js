@@ -18,14 +18,22 @@ var Blocks = require('../models').Blocks;
 
 var node_cache = {};
 
+/* flush node_cache each 1 day of month */
+new CronJob('0 0 0 1 * *', function() {
+  console.log('Flush node_cache', new Date());
+  fs.writeFileSync('./bin/node_cache.json', JSON.stringify({}));
+}, null, true, 'Europe/Rome');
+
 new CronJob('0 */5 * * * *', function() {
   Blocks.findOne({order: 'height DESC', limit: 1}).then(function(block) {
+    console.log(new Date());
     var hd = new memwatch.HeapDiff();
     var result = updateNextDifficulty(block.hash);
     fs.writeFileSync('./bin/node_cache.json', JSON.stringify(node_cache));
     node_cache = {};
     var diff = hd.end();
     console.log(diff);
+    console.log(new Date());
     if (result[0]) {
       console.error(result[0]); return;
     } else {
@@ -96,7 +104,6 @@ var tmp_node = b.getPrevNodeFromNode({
   previousblockhash: startHash
 })
 node = tmp_node[1]
-calcNextRequiredStakeDifficulty(node)
 
 // calcNextRequiredStakeDifficulty calculates the exponentially weighted average
 // and then uses it to determine the next stake difficulty.
@@ -374,4 +381,8 @@ function mergeDifficulty(oldDiff, newDiff1, newDiff2) {
 
   return summedChange
 }
+
+var result = calcNextRequiredStakeDifficulty(node);
+console.log(result);
+return result;
 }

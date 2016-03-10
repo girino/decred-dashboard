@@ -81,7 +81,7 @@ $(function() {
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
-          $('.est-pos-price').html(response.est_sbits + ' DCR <sup>beta</sup>');
+          $('.est-pos-price').html(response.est_sbits.toString().substr(0,5) + ' DCR <sup>beta</sup>');
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
           $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');
