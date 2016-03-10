@@ -2,7 +2,6 @@
   "name": "decred",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
   "apps": [
     {
       "name": "Decred app",
@@ -19,7 +18,7 @@
       }
     },
     {
-      "name": "Decred app",
+      "name": "Difficulty app",
       "script": "bin/difficulty.js",
       "node_args": [
         "--harmony"

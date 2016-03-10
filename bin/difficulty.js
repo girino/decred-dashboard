@@ -1,7 +1,8 @@
 var bigInt = require('big-integer');
+var exec = require('child_process').execSync;
+var fs = require('fs');
+var CronJob = require('cron').CronJob;
 var memwatch = require('memwatch-next');
-
-var Blocks = require('../models').Blocks;
 
 memwatch.on('leak', function(info) {
   console.log('Wow! Memory leak detected.');
@@ -12,7 +13,35 @@ memwatch.on('stats', function(stats) {
   console.dir(stats);
 });
 
-var b = {};
+var Stats = require('../models').Stats;
+var Blocks = require('../models').Blocks;
+
+var node_cache = {};
+
+new CronJob('0 */5 * * * *', function() {
+  Blocks.findOne({order: 'height DESC', limit: 1}).then(function(block) {
+    var hd = new memwatch.HeapDiff();
+    var result = updateNextDifficulty(block.hash);
+    fs.writeFileSync('./bin/node_cache.json', JSON.stringify(node_cache));
+    node_cache = {};
+    var diff = hd.end();
+    console.log(diff);
+    if (result[0]) {
+      console.error(result[0]); return;
+    } else {
+      Stats.findOne({where : {id : 1}}).then(function(stats) {
+        stats.update({est_sbits : result[1]});
+      });
+    }
+  }).catch(function(err) {
+    console.log(err);
+  });
+
+}, null, true, 'Europe/Rome');
+
+function updateNextDifficulty(startHash) {
+
+var b = {}
 // @see https://github.com/decred/dcrd/blob/master/chaincfg/params.go
 b.chainParams = {
   StakeDiffAlpha: 1,
@@ -26,43 +55,54 @@ b.chainParams = {
   TicketPoolSize: 8192
 }
 
-b.getPrevNodeFromNode = function(oldNode, next) {
-  Blocks.findOne({where: {height: (oldNode.height - 1)}}).then(function(prevNode) {
+// Cache the processed block nodes
+var cache = fs.readFileSync('./bin/node_cache.json', 'utf8')
+if (cache) {
+  node_cache = JSON.parse(cache)
+}
 
-    var node = {
-      hash : prevNode.hash,
-      height: prevNode.height,
-      header: {
-        SBits: prevNode.sbits * 1e8,
-        FreshStake: prevNode.num_tickets,
-        PoolSize: prevNode.poolsize
-      }
-    };
+b.getPrevNodeFromNode = function(oldNode) {
+  if (node_cache[oldNode.previousblockhash]) {
+    return [null, node_cache[oldNode.previousblockhash]]
+  }
 
-    return next([null, node]);
-  }).catch(function(error) {
-    console.error('getPrevNodeFromNode error');
-    return next([error, null]);
-  });
+  var data = exec('dcrctl getblock ' + oldNode.previousblockhash)
+  if ( ! data) {
+    return ['Something went wrong.', null]
+  }
+  data = JSON.parse(data)
+  console.log('*** ' + data.height)
+
+  var node = {
+    hash : data.hash,
+    height: data.height,
+    previousblockhash: data.previousblockhash,
+    header: {
+      SBits: data.sbits * 1e8,
+      FreshStake: data.freshstake,
+      PoolSize: data.poolsize
+    }
+  }
+
+  node_cache[data.hash] = node
+
+  return [null, node]
 }
 
 // Get the most current block node
-var node = {
-      hash : 123,
-      height: 9000,
-      header: {
-        SBits: 21.233 * 1e8,
-        FreshStake: 20,
-        PoolSize: 41000
-      }
-    };
+var node = {}
 
+var tmp_node = b.getPrevNodeFromNode({
+  previousblockhash: startHash
+})
+node = tmp_node[1]
+calcNextRequiredStakeDifficulty(node)
 
 // calcNextRequiredStakeDifficulty calculates the exponentially weighted average
 // and then uses it to determine the next stake difficulty.
 // TODO: You can combine the first and second for loops below for a speed up
 // if you'd like, I'm not sure how much it matters.
-function calcNextRequiredStakeDifficulty(curNode, next) {
+function calcNextRequiredStakeDifficulty(curNode) {
   var alpha = b.chainParams.StakeDiffAlpha
   var stakeDiffStartHeight = b.chainParams.CoinbaseMaturity + 1
   var maxRetarget = b.chainParams.RetargetAdjustmentFactor
@@ -80,7 +120,7 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   // Decred parameters, but might do weird things if you use custom
   // parameters.
   if (curNode == null || curNode.height < stakeDiffStartHeight) {
-    return next(null, b.chainParams.MinimumStakeDiff / 1e8);
+    return [null, b.chainParams.MinimumStakeDiff / 1e8]
   }
 
   // Get the old difficulty; if we aren't at a block height where it changes,
@@ -106,11 +146,8 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   var oldNode = curNode
   var windowPeriod = 0
   var weights = 0
-  var prev_i;
-  for (var i = 0; ; ) {
-    if (prev_i == i) continue;
-    prev_i = i;
-    console.log(i);
+
+  for (var i = 0; ; i++) {
     // Store and reset after reaching the end of every window period.
     if ((i + 1) % b.chainParams.StakeDiffWindowSize == 0) {
       // First adjust based on ticketPoolSize. Skew the difference
@@ -149,21 +186,18 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
 
     // Get the previous block node.
     var tempNode = oldNode
-    b.getPrevNodeFromNode(oldNode, function(ret) {
-      console.log(ret);
-      var err = ret[0]
-      oldNode = ret[1]
-      if (err != null) {
-        return next(err, 0);
-      }
+    var ret = b.getPrevNodeFromNode(oldNode)
+    var err = ret[0]
+    oldNode = ret[1]
+    if (err != null) {
+      return [err, 0]
+    }
 
-      // If we're at the genesis block, reset the oldNode
-      // so that it stays at the genesis block.
-      if (oldNode == null) {
-        oldNode = tempNode
-      }
-      i++;
-    });
+    // If we're at the genesis block, reset the oldNode
+    // so that it stays at the genesis block.
+    if (oldNode == null) {
+      oldNode = tempNode
+    }
   }
 
   // Sum up the weighted window periods.
@@ -188,7 +222,7 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   // if we are, return the maximum or minimum except in the case that oldDiff
   // is zero.
   if (oldDiff == 0) { // This should never really happen, but in case it does...
-    return next(null, nextDiffTicketPool);
+    return [null, nextDiffTicketPool]
   } else if (nextDiffTicketPool.equals(0)) {
     nextDiffTicketPool = oldDiff / maxRetarget
   } else if (nextDiffTicketPool.divide(oldDiff).gt(maxRetarget - 1)) {
@@ -207,10 +241,7 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   windowPeriod = 0
   weights = 0
 
-  for (i = 0; ; ) {
-    if (prev_i == i) continue;
-    prev_i = i;
-    console.log(i);
+  for (i = 0; ; i++) {
     // Add the fresh stake into the store for this window period.
     windowFreshStake += oldNode.header.FreshStake
 
@@ -248,20 +279,18 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
 
     // Get the previous block node.
     tempNode = oldNode
-    b.getPrevNodeFromNode(oldNode, function(ret) {
-      var err = ret[0]
-      oldNode = ret[1]
-      if (err != null) {
-        return next(err, 0);
-      }
+    var ret = b.getPrevNodeFromNode(oldNode)
+    var err = ret[0]
+    oldNode = ret[1]
+    if (err != null) {
+      return [err, 0]
+    }
 
-      // If we're at the genesis block, reset the oldNode
-      // so that it stays at the genesis block.
-      if (oldNode == null) {
-        oldNode = tempNode
-      }
-      i++;
-    });
+    // If we're at the genesis block, reset the oldNode
+    // so that it stays at the genesis block.
+    if (oldNode == null) {
+      oldNode = tempNode
+    }
   }
 
   // Sum up the weighted window periods.
@@ -286,7 +315,7 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   // if we are, return the maximum or minimum except in the case that oldDiff
   // is zero.
   if (oldDiff == 0) { // This should never really happen, but in case it does...
-    return next(null, nextDiffFreshStake);
+    return [null, nextDiffFreshStake]
   } else if (nextDiffFreshStake.equals(0)) {
     nextDiffFreshStake = oldDiff / maxRetarget
   } else if (nextDiffFreshStake.divide(oldDiff).gt(maxRetarget - 1)) {
@@ -302,7 +331,7 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   // if we are, return the maximum or minimum except in the case that oldDiff
   // is zero.
   if (oldDiff == 0) { // This should never really happen, but in case it does...
-    return next(null, oldDiff);
+    return [null, oldDiff]
   } else if (nextDiff.equals(0)) {
     nextDiff = oldDiff / maxRetarget
   } else if (nextDiff.divide(oldDiff).gt(maxRetarget - 1)) {
@@ -314,10 +343,10 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
   // If the next diff is below the network minimum, set the required stake
   // difficulty to the minimum.
   if (nextDiff.lt(b.chainParams.MinimumStakeDiff)) {
-    return next(null, b.chainParams.MinimumStakeDiff / 1e8);
+    return [null, b.chainParams.MinimumStakeDiff / 1e8]
   }
 
-  return next(null, nextDiff / 1e8);
+  return [null, nextDiff / 1e8]
 }
 
 
@@ -327,26 +356,22 @@ function calcNextRequiredStakeDifficulty(curNode, next) {
 // stake difficulties, merges the new difficulties, and outputs a new
 // merged stake difficulty.
 function mergeDifficulty(oldDiff, newDiff1, newDiff2) {
-  var newDiff1Big = bigInt(newDiff1);
-  var newDiff2Big = bigInt(newDiff2);
-  newDiff2Big = newDiff2Big.shiftLeft(32);
+  var newDiff1Big = bigInt(newDiff1)
+  var newDiff2Big = bigInt(newDiff2)
+  newDiff2Big = newDiff2Big.shiftLeft(32)
 
-  var oldDiffBig = bigInt(oldDiff);
-  var oldDiffBigLSH = oldDiffBig.shiftLeft(32);
+  var oldDiffBig = bigInt(oldDiff)
+  var oldDiffBigLSH = oldDiffBig.shiftLeft(32)
 
-  newDiff1Big = oldDiffBigLSH.divide(newDiff1Big);
-  newDiff2Big = newDiff2Big.divide(oldDiffBig);
+  newDiff1Big = oldDiffBigLSH.divide(newDiff1Big)
+  newDiff2Big = newDiff2Big.divide(oldDiffBig)
 
   // Combine the two changes in difficulty.
-  var summedChange = newDiff2Big.shiftLeft(32);
-  summedChange = summedChange.divide(newDiff1Big);
-  summedChange = summedChange.multiply(oldDiffBig);
-  summedChange = summedChange.shiftRight(32);
+  var summedChange = newDiff2Big.shiftLeft(32)
+  summedChange = summedChange.divide(newDiff1Big)
+  summedChange = summedChange.multiply(oldDiffBig)
+  summedChange = summedChange.shiftRight(32)
 
-  return summedChange;
+  return summedChange
 }
-
-calcNextRequiredStakeDifficulty(node, function(err, result) {
-  console.error(err);
-  console.log(result);
-});
+}
