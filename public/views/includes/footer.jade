@@ -16,5 +16,10 @@
     | Here you can find plenty of decred network statistics, charts, PoS-mining hints and predictions, FAQ etc.
     | This project is in continuous development, so feel free to contact us and ask for new functionality ;)
 script(src='js/bootstrap.min.js')
+script.
+  ((window.gitter = {}).chat = {}).options = {
+  room: 'Dyrk/decred-dashboard'
+  };
+script(src='https://sidecar.gitter.im/dist/sidecar.v1.js', async='', defer='')
 if env == 'production'
 script(src='js/metrics.js')

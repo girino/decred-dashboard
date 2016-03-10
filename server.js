@@ -104,7 +104,6 @@ new CronJob('0 */15 * * * *', function() {
   calculateAvgFees();
 }, null, true, 'Europe/Rome');
 
-parsePoolsHashrate();
 /* Save network hashrate each 30 mins */
 /* Parse PoW-pools */
 new CronJob('0 */30 * * * *', function() {
