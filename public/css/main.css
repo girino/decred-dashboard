@@ -64,6 +64,10 @@ p span.text-black {
   color: #333;
 }
 
+.small-text {
+  font-size: 12px;
+}
+
 table.table {
   background: #fff;
 }

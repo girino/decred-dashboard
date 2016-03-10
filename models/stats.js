@@ -23,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    est_sbits: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
     fees: {
       type: DataTypes.DOUBLE,
       allowNull: true
