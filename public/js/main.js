@@ -78,10 +78,12 @@ $(function() {
 
           var est_pos_blocks = 144 - (response.blocks % 144);
           var est_pos_time = secondsToTime(est_pos_blocks * response.average_time);
+          var pos_accuracy = ((response.blocks % 144) / 144 * 100).toString().substr(0,4) + '%';
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
           $('.est-pos-price').html(response.est_sbits.toString().substr(0,5) + ' DCR <sup>beta</sup>');
+          $('.est-pos-price-accuracy').html(pos_accuracy);
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
           $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');

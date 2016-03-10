@@ -65,7 +65,7 @@ p span.text-black {
 }
 
 .small-text {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 table.table {
@@ -74,6 +74,9 @@ table.table {
 
 @media (max-width: 768px) {
   .glyphicon {
+    display: none;
+  }
+  sup {
     display: none;
   }
   .gitter-open-chat-button {
@@ -99,6 +102,9 @@ table.table {
   }
   .reward-hints .hint-sm {
       min-height: 221px !important;
+  }
+  .small-text {
+    font-size: 12px;
   }
 }
 
