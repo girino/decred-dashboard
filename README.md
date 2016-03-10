@@ -1,5 +1,7 @@
 # Decred Dashboard
 
+[![Join the chat at https://gitter.im/Dyrk/decred-dashboard](https://badges.gitter.im/Dyrk/decred-dashboard.svg)](https://gitter.im/Dyrk/decred-dashboard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 See live version here: http://dcrstats.com
 ### Requirements
 - Node.js >= 4.2.6
