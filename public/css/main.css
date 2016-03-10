@@ -72,6 +72,9 @@ table.table {
   .glyphicon {
     display: none;
   }
+  .gitter-open-chat-button {
+    display: none;
+  }
   .stats-block .stats-title {
     font-size: 10px;
     line-height: 16px;
