@@ -49,7 +49,7 @@ $(function() {
           $('span.stats-difficulty').html(numberFormat(Math.floor(response.difficulty)));
           $('span.stats-time').html('0' + response.average_minutes + ':' + response.average_seconds);
 
-          var ticket_price = response.sbits.toString().substr(0,4); 
+          var ticket_price = response.sbits.toString().substr(0,5);
           /* 2.00000001 -> 2.01
            * 2.09999999 -> 2.10
            */
