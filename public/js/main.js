@@ -1,7 +1,7 @@
 $(function() {
 
   updateStats(true);
-  setInterval(updateStats, 60000);
+  setInterval(updateStats, 15000);
 
   function updateStats(isStartup) {
 
@@ -146,6 +146,7 @@ $(function() {
 $(function () {
 
     $('.glyphicon-question-sign').tooltip();
+    var nonce = (new Date()).getTime();
 
     $('.pos-group .btn-chart').on('click', function(e) {
       e.preventDefault();
@@ -153,11 +154,13 @@ $(function () {
       var time = $this.data('period');
       var chart = $this.data('chart');
 
+      var nonce = (new Date()).getTime();
+
       $this.parent().find('button').each(function(item) { $(this).removeClass('active'); });
       $this.addClass('active');
 
       $.ajax({
-        url: '/api/v1/pos?data='+chart+'&time='+time,
+        url: '/api/v1/pos?data='+chart+'&time='+time+'&nonce='+nonce,
         type: 'GET',
         dataType: "json",
         success: function (data) {
@@ -187,7 +190,7 @@ $(function () {
     });
 
     $.ajax({
-      url: '/api/v1/pos',
+      url: '/api/v1/pos?'+nonce,
       type: 'GET',
       dataType: "json",
       success: function (data) {

@@ -60,7 +60,7 @@ const DCR_TOTAL = PREMINE + MINED_DCR_BEFORE_POS;
 app.use('', site);
 app.use('/api/v1', api);
 
-new CronJob('0 */5 * * * *', function() {
+new CronJob('0 */1 * * * *', function() {
   /* Add new blocks */
   Blocks.findOne({order: 'height DESC', limit: 1}).then(function(block) {
     var newHeight = block ? (block.height + 1) : 1;
@@ -75,7 +75,8 @@ new CronJob('0 */5 * * * *', function() {
 
 }, null, true, 'Europe/Rome');
 
-new CronJob('0 */1 * * * *', function() {
+new CronJob('*/15 * * * * *', function() {
+  console.log('Stats start: ' + new Date());
   getPrices(function(err, result) {
     if (err) {
       console.error('Error, could not update price and common statistic.'); 
@@ -88,6 +89,7 @@ new CronJob('0 */1 * * * *', function() {
           stats.update(result).catch(function(err) {
             console.error(err);
           });
+          console.log('Stats end: ' + new Date());
         });
       }).catch(function(err) {
         console.error(err);
