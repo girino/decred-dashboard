@@ -2,6 +2,13 @@ body {
   background: #f2f2f0;
 }
 
+ins {
+  text-decoration: none;
+  font-size: 20px;
+  display: block;
+  margin: 10px 0;
+}
+
 .btn:focus {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
@@ -94,7 +101,7 @@ table.table {
   .mobile-top-chart {
     margin-bottom: 20px;
   }
-  .reward-hints .hint h5 {
+  .reward-hints .hint ins {
     font-size: 14px !important;
   }
   .reward-hints .hint-md {
@@ -203,14 +210,14 @@ table.table {
   color: #1b809e;
 }
 
-.hint h5 {
+.hint ins {
   font-size: 20px;
   color: #333;
   /* color: #CE4844; */
   font-weight: 300;
 }
 
-.hint h5.est-block-reward {
+.hint ins.est-block-reward {
   color: #7B7B7B;
 }
 
