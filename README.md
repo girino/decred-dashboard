@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/Dyrk/decred-dashboard](https://badges.gitter.im/Dyrk/decred-dashboard.svg)](https://gitter.im/Dyrk/decred-dashboard?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-See live version here: http://dcrstats.com
+See live version here: https://dcrstats.com
 ### Requirements
 - Node.js >= 4.2.6
 - Postgresql >= 9.3.10

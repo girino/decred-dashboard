@@ -44,6 +44,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: false
     },
+    estimated_ticket_price: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.DATE
     },

@@ -209,6 +209,26 @@ router.get('/prices', function (req, res) {
   });
 });
 
+router.get('/estimated_ticket_price', function (req, res) {
+  console.log('Estimated ticket price start: ', (new Date()).getTime());
+  let query = {
+    attributes: ['datetime', 'estimated_ticket_price'], 
+    order: 'height DESC', 
+    limit: 720
+  };
+  Blocks.findAll(query).then(function(blocks) {
+    var result = [];
+    for (let row of data) {
+      result.push([row.datetime,row.estimated_ticket_price]);
+    }
+    console.log('Estimated ticket price end: ', (new Date()).getTime());
+    res.status(200).json(result);
+  }).catch(function(err) {
+    console.log(err);
+    res.status(500).json({error : true});
+  });
+});
+
 router.get('/get_day', function (req, res) {
   let now = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60;
   Blocks.findAll({where: {datetime: {$gt: now}}, order: 'height ASC'})
@@ -229,6 +249,7 @@ router.get('/get_day', function (req, res) {
     res.status(200).json(result);
   }).catch(function(err) {
     console.log(err);
+    res.status(500).json({error : true});
   });
 });
 
