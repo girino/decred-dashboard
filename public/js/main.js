@@ -18,11 +18,11 @@ $(function() {
           if (usd_prev <= response.btc_last * response.usd_price) {
             $('span.stats-lastprice')
               .html('$' + usd_last + '<i class="fa fa-long-arrow-up"></i>')
-              .css('color', 'rgb(220, 42, 42)');
+              .css('color', '#64A537');
           } else {
             $('span.stats-lastprice')
               .html('$' + usd_last + '<i class="fa fa-long-arrow-down"></i>')
-              .css('color', '#64A537');
+              .css('color', 'rgb(220, 42, 42)');
           }
 
           var usd_low = (response.btc_low * response.usd_price).toString().substr(0,4);
@@ -34,11 +34,11 @@ $(function() {
           if (response.prev_day <= response.btc_last) {
             $('span.stats-btc')
               .html(response.btc_last + '<i class="fa fa-long-arrow-up"></i>')
-              .css('color', 'rgb(220, 42, 42)');
+              .css('color', '#64A537');
           } else {
             $('span.stats-btc')
               .html(response.btc_last + '<i class="fa fa-long-arrow-down"></i>')
-              .css('color', '#64A537');
+              .css('color', 'rgb(220, 42, 42)');
           }
 
           $('span.stats-btc-usd').text('$' + response.usd_price);
@@ -85,7 +85,7 @@ $(function() {
           if (response.est_sbits <= response.prev_est_sbits) {
             $('.est-pos-price').html('<i class="fa fa-long-arrow-down" style="color: rgb(220, 42, 42);"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
           } else {
-            $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: color: #64A537;"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
+            $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: #64A537;"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
           }
           $('.est-pos-price-accuracy').html(pos_accuracy);
 

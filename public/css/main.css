@@ -228,14 +228,16 @@ sup {
 }
 
 .fa-long-arrow-down {
-  font-size: 17px;
   vertical-align: middle;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 .fa-long-arrow-up {
-  font-size: 17px;
   vertical-align: middle;
   padding-bottom: 3px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 
 footer {
