@@ -40,7 +40,7 @@ new CronJob('0 */5 * * * *', function() {
       console.error(result[0]); return;
     } else {
       Stats.findOne({where : {id : 1}}).then(function(stats) {
-        stats.update({est_sbits : result[1]});
+        stats.update({est_sbits : result[1], prev_est_sbits : stats.est_sbits});
       });
       Blocks.findOne({where : {hash : block.hash}}).then(function(row) {
         row.update({estimated_ticket_price : result[1]});

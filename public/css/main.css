@@ -80,7 +80,8 @@ table.table {
 }
 
 @media (max-width: 768px) {
-  .glyphicon {
+  .glyphicon,
+  .fa {
     display: none;
   }
   sup {
@@ -224,6 +225,17 @@ table.table {
 sup {
   color: #1F8BB7;
   margin-left: 4px;
+}
+
+.fa-long-arrow-down {
+  font-size: 17px;
+  vertical-align: middle;
+}
+
+.fa-long-arrow-up {
+  font-size: 17px;
+  vertical-align: middle;
+  padding-bottom: 3px;
 }
 
 footer {

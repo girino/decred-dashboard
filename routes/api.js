@@ -210,6 +210,9 @@ router.get('/prices', function (req, res) {
 });
 
 router.get('/estimated_ticket_price', function (req, res) {
+  res.status(404).json({error : true, message: "Feature disabled"});
+  return;
+
   console.log('Estimated ticket price start: ', (new Date()).getTime());
   let query = {
     attributes: ['datetime', 'estimated_ticket_price'], 
@@ -222,30 +225,6 @@ router.get('/estimated_ticket_price', function (req, res) {
       result.push([row.datetime,row.estimated_ticket_price]);
     }
     console.log('Estimated ticket price end: ', (new Date()).getTime());
-    res.status(200).json(result);
-  }).catch(function(err) {
-    console.log(err);
-    res.status(500).json({error : true});
-  });
-});
-
-router.get('/get_day', function (req, res) {
-  let now = parseInt(Date.now() / 1000, 10) - 24 * 60 * 60;
-  Blocks.findAll({where: {datetime: {$gt: now}}, order: 'height ASC'})
-  .then(function(data) {
-    var sbits = 0, poolsize = 0, blocktime = 0, result = [], count = 0, timeinterval = 60 * 30;
-    for (let row of data) {
-      count++;
-      blocktime = count == 1 ? row.datetime : blocktime; 
-      if (row.datetime - blocktime <= timeinterval) {
-        sbits += row.sbits;
-        poolsize += row.poolsize;
-      } else {
-        count = (count == 1) ? 2 : count;
-        result.push([blocktime * 1000,poolsize / (count - 1)]);
-        sbits = poolsize = blocktime = count = 0;
-      }
-    }
     res.status(200).json(result);
   }).catch(function(err) {
     console.log(err);

@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
+    prev_est_sbits: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
     fees: {
       type: DataTypes.DOUBLE,
       allowNull: true

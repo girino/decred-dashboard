@@ -17,12 +17,12 @@ $(function() {
 
           if (usd_prev <= response.btc_last * response.usd_price) {
             $('span.stats-lastprice')
-              .html('$' + usd_last + '<i class="glyphicon glyphicon-arrow-up"></i>')
-              .css('color', '#64A537');
+              .html('$' + usd_last + '<i class="fa fa-long-arrow-up"></i>')
+              .css('color', 'rgb(220, 42, 42)');
           } else {
             $('span.stats-lastprice')
-              .html('$' + usd_last + '<i class="glyphicon glyphicon-arrow-down"></i>')
-              .css('color', 'rgb(220, 42, 42)');
+              .html('$' + usd_last + '<i class="fa fa-long-arrow-down"></i>')
+              .css('color', '#64A537');
           }
 
           var usd_low = (response.btc_low * response.usd_price).toString().substr(0,4);
@@ -33,12 +33,12 @@ $(function() {
 
           if (response.prev_day <= response.btc_last) {
             $('span.stats-btc')
-              .html(response.btc_last + '<i class="glyphicon glyphicon-arrow-up"></i>')
-              .css('color', '#64A537');
+              .html(response.btc_last + '<i class="fa fa-long-arrow-up"></i>')
+              .css('color', 'rgb(220, 42, 42)');
           } else {
             $('span.stats-btc')
-              .html(response.btc_last + '<i class="glyphicon glyphicon-arrow-down"></i>')
-              .css('color', 'rgb(220, 42, 42)');
+              .html(response.btc_last + '<i class="fa fa-long-arrow-down"></i>')
+              .css('color', '#64A537');
           }
 
           $('span.stats-btc-usd').text('$' + response.usd_price);
@@ -82,7 +82,11 @@ $(function() {
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
-          $('.est-pos-price').html(response.est_sbits.toString().substr(0,5) + ' DCR <sup>beta</sup>');
+          if (response.est_sbits <= response.prev_est_sbits) {
+            $('.est-pos-price').html('<i class="fa fa-long-arrow-down" style="color: rgb(220, 42, 42);"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
+          } else {
+            $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: color: #64A537;"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
+          }
           $('.est-pos-price-accuracy').html(pos_accuracy);
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
