@@ -1,3 +1,5 @@
+"use strict";
+
 var bigInt = require('big-integer');
 var exec = require('child_process').execSync;
 var fs = require('fs');
@@ -226,7 +228,7 @@ function calcNextRequiredStakeDifficulty(curNode) {
 
   // Right shift to restore the original padding (restore non-fixed point).
   nextDiffBig = nextDiffBig.shiftRight(32)
-  nextDiffTicketPool = nextDiffBig
+  var nextDiffTicketPool = nextDiffBig
 
   // Check to see if we're over the limits for the maximum allowable retarget;
   // if we are, return the maximum or minimum except in the case that oldDiff
@@ -319,7 +321,7 @@ function calcNextRequiredStakeDifficulty(curNode) {
 
   // Right shift to restore the original padding (restore non-fixed point).
   nextDiffBig = nextDiffBig.shiftRight(32)
-  nextDiffFreshStake = nextDiffBig
+  var nextDiffFreshStake = nextDiffBig
 
   // Check to see if we're over the limits for the maximum allowable retarget;
   // if we are, return the maximum or minimum except in the case that oldDiff

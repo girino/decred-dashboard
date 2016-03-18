@@ -218,7 +218,7 @@ router.get('/estimated_ticket_price', function (req, res) {
   };
   Blocks.findAll(query).then(function(blocks) {
     var result = [];
-    for (let row of data) {
+    for (let row of blocks) {
       result.push([row.datetime,row.estimated_ticket_price]);
     }
     console.log('Estimated ticket price end: ', (new Date()).getTime());
