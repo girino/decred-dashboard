@@ -104,6 +104,9 @@ new CronJob('0 */15 * * * *', function() {
 
   /* Calculate average fees in the mempool */
   calculateAvgFees();
+
+  /* Update ticketpoolvalue */
+  updateTicketpoolvalue();
 }, null, true, 'Europe/Rome');
 
 /* Save network hashrate each 30 mins */
@@ -537,6 +540,25 @@ function parsePoolsHashrate() {
     }).catch(function(err) {
       console.error(err); return;
     })
+}
+
+function updateTicketpoolvalue() {
+  exec("dcrctl getticketpoolvalue", function(error, stdout, stderr) {
+    try {
+      var price = parseInt(stdout, 10);
+    } catch(e) {
+      console.error("Error getticketpoolvalue", e);
+      return;
+    }
+
+    Stats.findOne({where : {id : 1}}).then(function(stats) {
+      stats.update({ticketpoolvalue : price}).catch(function(err) {
+        console.error(err);
+      });
+    }).catch(function(err) {
+      console.error(err);
+    });
+  });
 }
 
 app.listen(8080, function () {

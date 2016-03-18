@@ -31,6 +31,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
+    ticketpoolvalue: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
     fees: {
       type: DataTypes.DOUBLE,
       allowNull: true
