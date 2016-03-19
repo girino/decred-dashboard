@@ -66,35 +66,25 @@ $(function() {
           var max_fee = response.max_fees ? response.max_fees.toString().substr(0,6) : 0.05;
           $('span.stats-fees').html(avg_fee + ' <span class="hidden-xs">DCR</span>');
 
-          /***** Hints blocks *****/
-          /* PoS tickets */
-          var html = '';
-          if (response.sbits <= response.avg_sbits) {
-            html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price.</p></div>';
-          } else {
-            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than average price '+response.avg_sbits.toString().substr(0,4)+' DCR and all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
-          }
-          $('div.hint-pos').html(html);
-
           var est_pos_blocks = 144 - (response.blocks % 144);
           var est_pos_time = secondsToTime(est_pos_blocks * response.average_time);
-          var pos_accuracy = ((response.blocks % 144) / 144 * 100).toString().substr(0,4) + '%';
+          var pos_accuracy = ((response.blocks % 144) / 144 * 100).toString().substr(0,4);
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
           if (response.est_sbits <= response.prev_est_sbits) {
-            $('.est-pos-price').html('<i class="fa fa-long-arrow-down" style="color: rgb(220, 42, 42);"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
+            $('.est-pos-price').html('<i class="fa fa-long-arrow-down" style="color: #64A537;"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
           } else {
-            $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: #64A537;"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
+            $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: rgb(220, 42, 42);"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
           }
-          $('.est-pos-price-accuracy').html(pos_accuracy);
+          $('.est-pos-price-accuracy').html(pos_accuracy  + '%');
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
           $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');
           $('.pow-block-reward').html('<span class="hidden-xs"><b>PoW-reward</b>: </span><span class="visible-xs-block"><b>PoW</b>: </span>' + (block_reward * 0.6).toString().substr(0,6) + ' DCR');
           $('.pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (block_reward * 0.3 / 5).toString().substr(0,6) + ' DCR');
           $('.dev-block-reward').html('<span class="hidden-xs"><b>Dev subsidy</b>: </span><span class="visible-xs-block"><b>Devs</b>: </span>' + (block_reward * 0.1).toString().substr(0,6) + ' DCR');
-
+          
           var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144), response.reward);
           $('.est-block-reward').html(next_block_subsidy.toString().substr(0,5) + ' DCR');
 
@@ -103,9 +93,26 @@ $(function() {
           $('.est-reward-time').html('in '+est_subsidy_time.hours+' hours '+est_subsidy_time.minutes+' minutes');
           $('.est-reward-blocks').html('<b>' + est_subsidy_blocks + '</b> blocks left');
 
+          /***** Hints blocks *****/
+
+          /* PoS tickets */
+          var html = '';
+          if (response.sbits <= response.avg_sbits) {
+            if (parseInt(pos_accuracy) >= 75 && response.est_sbits < response.sbits) {
+              html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than next estimated ticket price '+response.est_sbits.toString().substr(0,5)+' DCR. <br> Forecast accuracy is '+pos_accuracy+'%. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+            } else {
+              html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price.</p></div>';
+            }
+          } else {
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than average price '+response.avg_sbits.toString().substr(0,4)+' DCR and all time low 2 DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+          }
+          $('div.hint-pos').html(html);
+
           /* Mempool fees */
           $('b.avg-fee').html(avg_fee + ' DCR');
           $('b.max-fee').html(max_fee + ' DCR');
+
+           /***** Hints blocks end *****/
 
           /* Draw voters chart on page load */
           if (isStartup) {
