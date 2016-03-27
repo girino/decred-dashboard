@@ -15,12 +15,26 @@
     | &nbsp;so feel free to send any improvements and bug reports on github.
     | Here you can find plenty of decred network statistics, decred charts, PoS-mining hints and predictions, FAQ etc.
     | This project is in continuous development, so feel free to contact us and ask for new functionality ;)
-script(src='js/bootstrap.min.js')
+script(src='/js/bootstrap.min.js')
 script.
   ((window.gitter = {}).chat = {}).options = {
   room: 'Dyrk/decred-dashboard',
   activationElement: '.show-chat'
   };
 script(src='https://sidecar.gitter.im/dist/sidecar.v1.js', async='', defer='')
+if page == 'write'
+  #imagemodal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+      .modal-dialog
+        .modal-content
+          .modal-body
+            img#imagepreview(src='', style='width: 100%;')
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+
+if page == 'write'
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js')
+  script(src='/js/vue.min.js')
+  script(src='/js/autosize.min.js')
+  script(src='/js/write.js')
 if env == 'production'
-script(src='js/metrics.js')
+  script(src='/js/metrics.js')

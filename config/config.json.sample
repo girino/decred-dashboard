@@ -5,7 +5,9 @@
     "database": "database_development",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "logging": false
+    "logging": false,
+    "email_pass": "change-this-password",
+    "base_url": "http://localhost:8080"
   },
   "production": {
     "username": "decred",
@@ -13,6 +15,8 @@
     "database": "database_production",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "logging": false
+    "logging": false,
+    "email_pass": "change-this-password",
+    "base_url": "https://dcrstats.com"
   }
 }

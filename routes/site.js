@@ -3,10 +3,14 @@
 var fs = require('fs');
 var marked = require('marked');
 var express = require('express');
+var validator = require("email-validator");
+var nodemailer = require('nodemailer');
+
 var router = express.Router();
 
 var strings = require('../public/strings/seo.json');
 var env = process.env.NODE_ENV || 'development';
+var config = require('../config/config.json')[env];
 
 router.get('/', function (req, res) {
   let data = {
@@ -35,7 +39,46 @@ router.get('/articles', function(req, res) {
     title: strings.articles_title,
     desc: strings.articles_desc
   };
-  res.render('news', data);
+  res.render('articles', data);
+});
+
+router.get('/articles/write-decred-tutorial', function(req, res) {
+  let data = {
+    env : env,
+    page: 'write',
+    title: strings.articles_title,
+    desc: strings.articles_desc
+  };
+  res.render('write', data);
+});
+
+router.post('/articles/write-decred-tutorial', function(req, res) {
+  var name = req.body.name;
+  var email = req.body.email;
+  var link = req.body.link;
+  var tutorial = req.body.tutorial;
+
+  if (name && validator.validate(email) && tutorial) {
+    console.log('New tutorial successfuly submited.');
+    var transporter = nodemailer.createTransport('smtps://dcrstats%40gmail.com:'+config.email_pass+'@smtp.gmail.com');
+    var mailOptions = {
+        from: '"Decred Tutorials" <dcrstats@gmail.com>',
+        to: 'info@dcrstats.com',
+        subject: 'New Tutorial submited by ' + name,
+        text: tutorial + '\n\nEmail: ' + email + '\n\nLink:' + link
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error) {
+          console.log('Email: ' + email);
+          console.log(tutorial);
+          res.status(200).json({error : true, message: strings.mailer_error});
+        }
+        res.status(200).json({success : true, message: strings.article_submited});
+    });
+  } else {
+    console.log('New tutorial submission failed.');
+    res.status(200).json({error : true, message: strings.article_validation_error});
+  }
 });
 
 router.get('/articles/:uri', function(req, res) {

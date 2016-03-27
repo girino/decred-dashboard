@@ -287,8 +287,33 @@ footer div.pluso .pluso-wrap a {
 }
 
 /* blog */
-body.news {
-  background: #fff;
+.articles-header {
+  background: url('/img/articles_bg.png');
+  text-align: center;
+  color: #fff;
+  margin-top: -20px;
+  padding: 75px 0;
+}
+
+.articles-header h1 {
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+.articles-header p.articles-subtitle {
+  font-size: 15px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  padding: 15px 0;
+}
+
+.articles-header .btn {
+  letter-spacing: 1xp;
+}
+
+.articles-list .article {
+  border-bottom: 1px solid #e8e8e8;
+  padding: 15px 5px;
 }
 
 .articles-list h2 {
@@ -296,7 +321,21 @@ body.news {
 }
 
 .articles-list h3 a {
-  color: #444;
+  color: #111;
+  font-weight: 200;
+  font-size: 18px;
+}
+
+.articles-list h3 a:hover {
+  color: #2481b7;
+}
+
+.articles-list .meta a {
+  color: #c3c3c3;
+}
+
+.articles-list .fa-comment-o {
+  padding-right: 5px;
 }
 
 .article,
@@ -315,7 +354,52 @@ body.news {
   margin-bottom: 10px;
 }
 
-.article p {
+.write-article-description {
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  margin-bottom: 45px;
+}
+
+.write-article-description h1 {
+  font-size: 24px;
+}
+
+.write-article-description p,
+.write-article-description li {
+  font-size: 16px;
+}
+
+.write-article-description p.attention {
+  color: #E04949;
+}
+
+
+.article-form label {
+  font-size: 14px;
+  font-weight: 200;
+}
+
+.article-form input {
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #d4d4d4;
+  font-size: 15px;
+  color: #333;
+  font-size: 17px;
+}
+
+.article-preview {
+  background: #fff;
+  min-height: 440px;
+}
+
+.article-preview img {
+  max-width: 100% !important;
+}
+
+.article p,
+.article-preview p {
   color: #333;
   font-family: news-content-serif-font,Georgia,Cambria,"Times New Roman",Times,serif;
   letter-spacing: .01rem;
@@ -325,6 +409,69 @@ body.news {
   line-height: 1.58;
   letter-spacing: -.003em;
   margin-top: 29px;
+}
+
+.submission-response,
+.submission-progress {
+  margin-top: 30px;
+}
+
+.submission-response .alert {
+  margin: 0;
+}
+
+button.submit-article {
+  width: 100%;
+  background-color: #93cc76;
+  border-radius: 3px;
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  text-align: center;
+  font-size: 16px;
+  height: 60px;
+  line-height: 45px;
+  letter-spacing: 1.5px;
+  margin: 20px 0;
+}
+
+button.submit-article:disabled {
+  background-color: #a2a2a2;
+}
+
+/* VUE markdown editor */
+
+html, body, #editor {
+  margin: 0;
+  height: 100%;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: #333;
+}
+
+textarea, #editor div {
+  display: inline-block;
+  width: 49%;
+  height: 100%;
+  vertical-align: top;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 20px;
+}
+
+#editor textarea {
+  border: none;
+  border-right: 1px solid #ccc;
+  resize: none;
+  outline: none;
+  background-color: #f6f6f6;
+  font-size: 14px;
+  font-family: 'Monaco', courier, monospace;
+  padding: 20px;
+}
+
+code {
+  color: #f66;
 }
 
 /* 404 page */

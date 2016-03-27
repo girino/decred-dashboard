@@ -8,3 +8,6 @@ snippets.js
 npm-debug.log
 uploads
 bin/node_cache.json
+test.js
+public/articles
+publish_article.sh

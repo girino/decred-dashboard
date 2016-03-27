@@ -1,0 +1,67 @@
+doctype html
+html(lang='en')
+  head
+    include ./includes/head.jade
+  body
+    include ./includes/navigation.jade
+    .container(style="max-width: 1170px;")
+      .row
+        div.write-article-description
+          h1 Write your Decred Tutorial and receive 5 DCR in reward
+
+          p.attention Please read this carefully before you start working on a new tutorial to save your and our time.
+
+          p Anyone can write a tutorial and get a reward, but there are some mandatory rules which need to be considered:
+
+          ul
+            li We garantee that you'll get reward for your article, only if it is published on our site.
+            li We keep our right to choose which articles to publish.
+
+          p But don't worry - to get your tutorial published is not so difficult. You just need follow some rules writing it:
+          ul
+            li text should be unique, don't try to publish copy of someone else tutorial;
+            li choosing the topic for your tutorial, please check first that it's not yet published on dcrstats.com. But if you want to expand/update already published arctile, because it is outdated or you have some new important information - that's highly appreciated
+            li if you have doubts that the topic that you've chosen will be interesting for the Decred Community - please contact us to discuss the details: 
+              b info@dcrstats.com
+
+          p Feel free to contact us in case of any doubts and questions. We are happy to help you.
+          p Once you submited your article - we'll provide our feedback as soon as possible.
+
+          p Let's work together on building up of the Great Decred Community.
+        form.article-form
+          .form-group
+            a#pop.show-markdown(href="/img/markdown.png")
+              i.fa.fa-question-circle 
+              |  Show markdown help
+          #editor
+            textarea#content(v-model="input",debounce="300", rows="20")
+              | # Edit me :)
+              | We are using [markdown](http://daringfireball.net/projects/markdown/basics) for this editor. It allows you to add images, links and text styling to your tutorial.
+
+              | Write your text on the left side and immediately see preview on the right side.
+              | Good luck ;)
+            div.article-preview(v-html="input | marked")
+          .form-group(style="margin-top: 20px;")
+            label(for='name') 
+              b Name
+              |  (Required) 
+            input#name.form-control(type='text', name="name")
+          .form-group
+            label(for='email') 
+              b Email
+              |  (Required) 
+            input#email.form-control(type='text', name="email")
+          .form-group
+            label(for='link') 
+              b Link to social profile
+              |  (Optional) 
+            input#link.form-control(type='text', name="link")
+          .form-group.submission-response
+          .form-group.submission-progress(style="display: none;")
+            .progress
+              .progress-bar.progress-bar-striped.active(role='progressbar', aria-valuenow='100', aria-valuemin='0', aria-valuemax='100', style='width: 100%')
+                span.sr-only 45% Complete
+          .form-group
+            button#submit-article.submit-article(type="submit") Submit Tutorial
+    footer
+      include ./includes/footer.jade

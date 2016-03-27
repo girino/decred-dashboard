@@ -1,0 +1,50 @@
+doctype html
+html(lang='en')
+  head
+    include ./includes/head.jade
+  body
+    include ./includes/navigation.jade
+    .articles-header
+      h1 Decred Tutorials
+      p.articles-subtitle
+        | Write a tutorial and get 5 DCR in reward.
+        br
+        | Let's build great Decred Community together!
+      a.btn.btn-info(href='/articles/write-decred-tutorial') Write a Tutorial
+    .container
+      .row.articles-list
+        .article
+          h3
+            a(href='/articles/decred-proof-of-stake-mining') How to buy Decred for USD / EUR
+          .meta
+            a(href='/articles/decred-proof-of-stake-mining')
+              i.fa.fa-comment-o
+              span.fb-comments-count(data-href="/articles/decred-proof-of-stake-mining") 0 
+              span  comments
+        .article
+          h3
+            a(href="/articles/decred-proof-of-stake-mining") Understanding of Proof of Stake (PoS) in Decred
+          .meta
+            a(href='/articles/decred-proof-of-stake-mining')
+              i.fa.fa-comment-o
+              span.fb-comments-count(data-href="/articles/decred-proof-of-stake-mining") 0 
+              span  comments
+        .article
+          h3
+            a(href='/articles/decred-proof-of-stake-mining') How to start Solo PoS-ming
+          .meta
+            a(href='/articles/decred-proof-of-stake-mining')
+              i.fa.fa-comment-o
+              span.fb-comments-count(data-href="/articles/decred-proof-of-stake-mining") 0 
+              span  comments
+        .article
+          h3
+            a(href='/articles/decred-proof-of-stake-mining') How to start PoS-mining in the Stake Pool
+          .meta
+            a(href='/articles/decred-proof-of-stake-mining')
+              i.fa.fa-comment-o
+              span.fb-comments-count(data-href="/articles/decred-proof-of-stake-mining") 0 
+              span  comments
+
+    footer
+      include ./includes/footer.jade
