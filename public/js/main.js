@@ -90,7 +90,11 @@ $(function() {
 
           var est_subsidy_blocks = 6144 - (response.blocks % 6144);
           var est_subsidy_time = secondsToTime(est_subsidy_blocks * response.average_time);
-          $('.est-reward-time').html('in '+est_subsidy_time.hours+' hours '+est_subsidy_time.minutes+' minutes');
+          if (est_subsidy_time.days) {
+            $('.est-reward-time').html('in '+est_subsidy_time.days+' days '+est_subsidy_time.hours+' hours');
+          } else {
+            $('.est-reward-time').html('in '+est_subsidy_time.hours+' hours '+est_subsidy_time.minutes+' minutes');
+          }
           $('.est-reward-blocks').html('<b>' + est_subsidy_blocks + '</b> blocks left');
 
           /***** Hints blocks *****/
@@ -261,5 +265,13 @@ function secondsToTime(secs) {
     minutes = "0" + minutes.toString();
   }
 
-  return {"hours": hours, "minutes": minutes};
+  var days = 0;
+
+  if (hours >= 24) {
+    days = parseInt(hours / 24, 10);
+    hours = hours - days * 24;
+    minutes = 0;
+  }
+
+  return {"days" : days, "hours": hours, "minutes": minutes};
 }
