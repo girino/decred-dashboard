@@ -114,6 +114,9 @@ table.table {
   .small-text {
     font-size: 12px;
   }
+  .article p a {
+    font-size: 12px;
+  }
 }
 
 .btn-toolbar {

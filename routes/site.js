@@ -46,7 +46,7 @@ router.get('/articles/write-decred-tutorial', function(req, res) {
   let data = {
     env : env,
     page: 'write',
-    title: strings.articles_title,
+    title: strings.articles_write_title,
     desc: strings.articles_desc
   };
   res.render('write', data);
@@ -91,9 +91,19 @@ router.get('/articles/:uri', function(req, res) {
       res.render('404');
     } else {
       var html = jade.compile(data)();
-      res.render('article', {content : html, uri : uri});
+      res.render('article', {
+        content : html, 
+        uri : uri,
+        title : getTutorialTitle(uri),
+        desc: strings.articles_desc
+      });
     }
   });
 });
+
+function getTutorialTitle(string) {
+    var title = string.charAt(0).toUpperCase() + string.slice(1);
+    return title.replace(/-/g, ' ') + " | Dcrstats";
+}
 
 module.exports = router;
