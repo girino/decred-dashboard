@@ -71,7 +71,9 @@ router.post('/articles/write-decred-tutorial', function(req, res) {
         if(error) {
           console.log('Email: ' + email);
           console.log(tutorial);
+          console.error(error);
           res.status(200).json({error : true, message: strings.mailer_error});
+          return;
         }
         res.status(200).json({success : true, message: strings.article_submited});
     });
