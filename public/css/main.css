@@ -345,9 +345,21 @@ footer div.pluso .pluso-wrap a {
   margin: 0 auto;
 }
 
+.article {
+  padding: 0 20px;
+}
+
 .container .row .fb-comments,
 .container .row .fb_iframe_widget {
   display: block;
+}
+
+.article img {
+  width: 100%;
+}
+
+.article li {
+  font-size: 18px;
 }
 
 .article h1 {

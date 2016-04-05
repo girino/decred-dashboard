@@ -71,7 +71,7 @@ new CronJob('0 */1 * * * *', function() {
   });
 
   /* Count total missed tickets */
-  checkMissedTickets()
+  checkMissedTickets();
 
 }, null, true, 'Europe/Rome');
 
@@ -83,7 +83,8 @@ new CronJob('*/15 * * * * *', function() {
       return;
     } else {
       Stats.findOrCreate({where : {id : 1}, defaults : result }).spread(function(stats, created) {
-        let query = 'SELECT AVG(DISTINCT(sbits)) as sbits FROM blocks';
+        let timestamp = Math.floor(new Date() / 1000) - 30 * 24 * 60 * 60;
+        let query = 'SELECT AVG(DISTINCT(sbits)) as sbits FROM blocks WHERE datetime >= ' + timestamp;
         sequelize.query(query, { model: Blocks }).then(function(data) {
           result.avg_sbits = data[0].dataValues.sbits;
           stats.update(result).catch(function(err) {
@@ -96,6 +97,7 @@ new CronJob('*/15 * * * * *', function() {
       });
     }
   });
+
 }, null, true, 'Europe/Rome');
 
 new CronJob('0 */15 * * * *', function() {
@@ -107,6 +109,9 @@ new CronJob('0 */15 * * * *', function() {
 
   /* Update ticketpoolvalue */
   updateTicketpoolvalue();
+
+  /* Update coinsupply */
+  updateCoinSupply();
 }, null, true, 'Europe/Rome');
 
 /* Save network hashrate each 30 mins */
@@ -553,6 +558,25 @@ function updateTicketpoolvalue() {
 
     Stats.findOne({where : {id : 1}}).then(function(stats) {
       stats.update({ticketpoolvalue : price}).catch(function(err) {
+        console.error(err);
+      });
+    }).catch(function(err) {
+      console.error(err);
+    });
+  });
+}
+
+function updateCoinSupply() {
+  exec("dcrctl getcoinsupply", function(error, stdout, stderr) {
+    try {
+      var supply = parseInt(stdout, 10);
+    } catch(e) {
+      console.error("Error getcoinsupply", e);
+      return;
+    }
+
+    Stats.findOne({where : {id : 1}}).then(function(stats) {
+      stats.update({coinsupply : supply}).catch(function(err) {
         console.error(err);
       });
     }).catch(function(err) {

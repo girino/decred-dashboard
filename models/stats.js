@@ -19,6 +19,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.BIGINT,
       allowNull: false
     },
+    coinsupply: {
+      type: DataTypes.BIGINT,
+      allowNull: true
+    },
     pooledtx: {
       type: DataTypes.INTEGER,
       allowNull: false

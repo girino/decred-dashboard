@@ -108,13 +108,21 @@ $(function() {
               html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price.</p></div>';
             }
           } else {
-            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than average price '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than 30-days average price '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
           }
           $('div.hint-pos').html(html);
 
           /* Mempool fees */
-          $('b.avg-fee').html(avg_fee + ' DCR');
-          $('b.max-fee').html(max_fee + ' DCR');
+          // $('b.avg-fee').html(avg_fee + ' DCR');
+          // $('b.max-fee').html(max_fee + ' DCR');
+
+          /* Total locked DCR in PoS */
+          $('.poolvalue').html(numberFormat(response.ticketpoolvalue) + ' DCR');
+          var avg_price_in_pool = Math.round((response.ticketpoolvalue / response.poolsize) * 100) / 100;
+          var coinsupply = response.coinsupply / 100000000;
+          var poolvalue_percent = ((response.ticketpoolvalue / coinsupply) * 100).toString().substr(0,5);
+          $('.poolvalue-percent').html(poolvalue_percent + ' %');
+          $('.avg-price-in-pos-pool').html(avg_price_in_pool + ' DCR');
 
            /***** Hints blocks end *****/
 

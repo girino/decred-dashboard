@@ -1,7 +1,7 @@
 "use strict";
 
 var fs = require('fs');
-var marked = require('marked');
+var jade = require('jade');
 var express = require('express');
 var validator = require("email-validator");
 var nodemailer = require('nodemailer');
@@ -83,13 +83,13 @@ router.post('/articles/write-decred-tutorial', function(req, res) {
 
 router.get('/articles/:uri', function(req, res) {
   var uri = req.params.uri;
-  fs.readFile('./public/articles/' + uri + '.md', 'utf8', function(err, data) {
+  fs.readFile('./public/articles/' + uri + '.jade', 'utf8', function(err, data) {
     if (err) {
       console.error('Page not found: ', uri);
       res.render('404');
     } else {
-      var content = marked(data);
-      res.render('article', {content : content, uri : uri});
+      var html = jade.compile(data)();
+      res.render('article', {content : html, uri : uri});
     }
   });
 });

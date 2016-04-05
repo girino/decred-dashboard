@@ -99,13 +99,17 @@ html(lang='en')
         .col-xs-12.col-md-6.hint-pos
         .col-xs-12.col-md-6
           .hint.hint-blue
-            h4 Keep tracking mempool fees
+            h4 Locked DCR in PoS-mining
             p
-              | Maximum fee in the mempool is 
-              b.max-fee - DCR
-              | , while the average is 
-              b.avg-fee - DCR
-              | . Usually we don't suggest to set fees higher than average. However if you want to be sure that your transactions will be included in the next block, you can set fee a little higher than current max.
+              | Current PoS pool value is 
+              b.poolvalue - DCR
+              | . It is 
+              b.poolvalue-percent x%
+              |  of total available supply.
+              br
+              | Average ticket price in the pool is 
+              span.avg-price-in-pos-pool - DCR
+              | .
       .row
         .col-xs-12.col-sm-12
           .btn-toolbar(role='toolbar')
