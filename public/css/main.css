@@ -337,6 +337,11 @@ footer div.pluso .pluso-wrap a {
   color: #c3c3c3;
 }
 
+.meta span.author {
+  color: #B3B3B3;
+  font-size: 13px;
+}
+
 .articles-list .fa-comment-o {
   padding-right: 5px;
 }

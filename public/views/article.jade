@@ -17,6 +17,6 @@ html(lang='en')
       .row
         .article!= content
           hr
-        .fb-comments(data-href="https://dcrstats.com/articles/#{uri}",data-numposts="10",data-width="700")
+        #comments.fb-comments(data-href="https://dcrstats.com/articles/#{uri}",data-numposts="10",data-width="700")
     footer
       include ./includes/footer.jade
