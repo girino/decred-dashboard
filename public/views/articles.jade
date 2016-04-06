@@ -4,22 +4,31 @@ html(lang='en')
     include ./includes/head.jade
   body
     include ./includes/navigation.jade
+    #fb-root
+    script.
+      (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v2.5&appId=297377503766427";
+      fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
     .articles-header
       h1 Decred Tutorials
       p.articles-subtitle
         | Write a tutorial and get 5 DCR in reward.
         br
         | Let's build great Decred Community together!
-      a.btn.btn-info(href='/articles/write-decred-tutorial') Write a Tutorial
+      a.btn.btn-info(href='https://dcrstats.com/articles/write-decred-tutorial') Write a Tutorial
     .container
       .row.articles-list
         .article
           h3
-            a(href='/articles/how-to-buy-decred-with-usd-euro') How to buy Decred with USD, EUR
+            a(href='https://dcrstats.com/articles/how-to-buy-decred-with-usd-euro') How to buy Decred with USD, EUR
           .meta
-            a(href='/articles/how-to-buy-decred-with-usd-euro')
+            a(href='https://dcrstats.com/articles/how-to-buy-decred-with-usd-euro')
               i.fa.fa-comment-o
-              span.fb-comments-count(data-href="/articles/how-to-buy-decred-with-usd-euro") 0 
+              span.fb-comments-count(data-href="https://dcrstats.com/articles/how-to-buy-decred-with-usd-euro") 0 
               span  comments
 
     footer
