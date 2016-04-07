@@ -92,6 +92,7 @@ router.get('/articles/:uri', function(req, res) {
     } else {
       var html = jade.compile(data)();
       res.render('article', {
+        env : env,
         content : html, 
         uri : uri,
         title : getTutorialTitle(uri),
