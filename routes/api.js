@@ -31,6 +31,7 @@ router.get('/pos', function (req, res) {
     if (isNaN(day)) { 
       day = 365;
     }
+
     var datetime = Math.floor((new Date()) / 1000) - day * 24 * 60 * 60;
     var query = `SELECT DISTINCT(sbits), MIN(datetime) as datetime
              from blocks ` + `WHERE datetime >= ` + datetime + ` group by sbits order by datetime asc`;
@@ -76,8 +77,8 @@ router.get('/pos', function (req, res) {
     } else {
 
       var sbits_query = {order: 'timestamp ASC'};
-      if (day) {
-        sbits_query.where = {timestamp: {$gt : day}};
+      if (datetime) {
+        sbits_query.where = {timestamp: {$gt : datetime}};
       }
       PosAvg.findAll(sbits_query).then(function(data) {
         for (let day of data) {
