@@ -2,11 +2,12 @@
   "main_title" : "Decred Stats, Network Statistic, Charts - Dcrstats",
   "main_desc"  : "Decred is an open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain.",
   "pow_title" : "Decred Network Hashrate Distribution, Proof of Work Charts - Dcrstats",
-  "pow_desc" : "Decred is an open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain.",
+  "pow_desc" : "Decred Proof of Work Charts, Network Hashrate Distribution, Mining Pools statistic and mining difficulty.",
   "mailer_error" : "Server Error occurred. But don't worry, your article saved in local storage of your browser (you use modern browser, right?). Just try to submit your tutorial again, and don't be afraide to close this tab or your browser. You'll find your article safe here, when you return to this page. Please feel free to contact us via email: <b>info@dcrstats.com</b>",
   "article_validation_error" : "Validation error! Please check required fields: Name, Email",
   "article_submited" : "Thank you! Your tutorial was succesfully submited. We will contact you via email as soon as possible ;)",
   "articles_title" : "Decred Tutorials | Dcrstats",
+  "articles_desc" : "At dcrstats we publish for you best Decred tutorials and guides",
   "articles_write_title" : "Get Paid to write Decred Tutorial | Dcrstats",
-  "articles_desc" : "Decred is an open, progressive, and self-funding cryptocurrency with a system of community-based governance integrated into its blockchain."
+  "articles_write_desc" : "Get paid in DCR to write a Decred Tutorial. Let's build great Decred Community together!"
 }

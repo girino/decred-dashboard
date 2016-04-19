@@ -47,7 +47,7 @@ router.get('/articles/write-decred-tutorial', function(req, res) {
     env : env,
     page: 'write',
     title: strings.articles_write_title,
-    desc: strings.articles_desc
+    desc: strings.articles_write_desc
   };
   res.render('write', data);
 });
