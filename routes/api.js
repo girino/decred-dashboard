@@ -167,11 +167,13 @@ router.get('/pools', function(req, res) {
         result.push({workers: pool.workers, name : pool.name, y : hashrate, network: networkTotal});
       }
       var soloMiners = Math.round((stats.networkhashps / 1000 / 1000 / 1000 - total) * 100) / 100;
-      result.push({
-        workers: '-', 
-        name : 'Solo miners', 
-        y : soloMiners
-      });
+      if (soloMiners > 0) {
+        result.push({
+          workers: '-', 
+          name : 'Solo miners', 
+          y : soloMiners
+        });
+      }
       return res.status(200).json(result);
     }).catch(function(err) {
       console.log(err);
