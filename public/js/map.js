@@ -17,7 +17,7 @@ $(function() {
 
   function drawMap(peers) {
     /* Prepare array with nodes */
-    var map = peers.map(function (peer) {
+    var map = _.map(peers, function (peer) {
       if(peer.geo != null) {
         return {
           radius: 3,

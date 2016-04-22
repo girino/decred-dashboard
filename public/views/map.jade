@@ -10,12 +10,13 @@ html(lang='en')
           #nodes_map(style='position: relative; width: 100%; height: 500px;')
       .row
         .col-xs-12.col-md-12
-          table#nodes-table.table.chart-container
-            tr
-              th City, Country
-              th IP address : host
-              th Latency
-              th Lastblock
-              th Decred software version
+          .table-responsive
+            table#nodes-table.table.chart-container
+              tr
+                th City, Country
+                th IP address : host
+                th Latency
+                th Lastblock
+                th Decred software version
     footer
       include ./includes/footer.jade
