@@ -1,6 +1,7 @@
 "use strict";
 
 var fs = require('fs');
+var path = require('path');
 var express = require('express');
 var router = express.Router();
 
@@ -260,6 +261,10 @@ router.get('/get_stats', function (req, res) {
   }).catch(function(err) {
     console.error(err);
   });
+});
+
+router.get('/peerinfo', function(req, res) {
+  res.sendFile(path.normalize(__dirname + '/../uploads/peers.json'));
 });
 
 module.exports = router;

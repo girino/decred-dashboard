@@ -32,6 +32,16 @@ router.get('/pow', function(req, res) {
   res.render('pow', data);
 });
 
+router.get('/map', function(req, res) {
+  let data = {
+    env : env,
+    page: 'map',
+    title: strings.map_title,
+    desc: strings.map_desc
+  };
+  res.render('map', data);
+});
+
 router.get('/articles', function(req, res) {
   let data = {
     env : env,

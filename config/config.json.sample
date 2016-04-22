@@ -4,19 +4,27 @@
     "password": "",
     "database": "database_development",
     "host": "127.0.0.1",
+    "rpc_port" : "19109",
     "dialect": "postgres",
     "logging": false,
     "email_pass": "change-this-password",
-    "base_url": "http://localhost:8080"
+    "base_url": "http://localhost:8080",
+    "rpc_cert" : "",
+    "rpc_user" : "",
+    "rpc_password" : ""
   },
   "production": {
     "username": "decred",
     "password": "",
     "database": "database_production",
     "host": "127.0.0.1",
+    "rpc_port": "9109",
     "dialect": "postgres",
     "logging": false,
     "email_pass": "change-this-password",
-    "base_url": "https://dcrstats.com"
+    "base_url": "https://dcrstats.com",
+    "rpc_cert" : "",
+    "rpc_user" : "",
+    "rpc_password" : ""
   }
 }

@@ -40,12 +40,14 @@
     "cron": "^1.1.0",
     "email-validator": "^1.0.4",
     "express": "^4.13.4",
+    "geoip-lite": "^1.1.7",
     "jade": "^1.11.0",
     "moment": "^2.11.1",
     "nodemailer": "^2.3.0",
     "pg": "^4.4.4",
     "request": "^2.69.0",
-    "sequelize": "^3.19.0"
+    "sequelize": "^3.19.0",
+    "ws": "^1.1.0"
   },
   "devDependencies": {
     "memwatch-next": "^0.2.10"

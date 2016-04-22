@@ -7,24 +7,18 @@ var bodyParser = require('body-parser');
 var exec    = require('child_process').exec;
 var CronJob = require('cron').CronJob;
 var fs = require('fs');
-var marked = require('marked');
-var memwatch = require('memwatch-next');
+var geoip = require('geoip-lite');
+var WebSocket = require('ws');
 
 var api = require('./routes/api.js');
 var site = require('./routes/site.js');
 var strings = require('./public/strings/seo.json');
 var env = process.env.NODE_ENV || 'development';
+var config = require('./config/config.json')[env];
 
-if (env == 'production') {
-  memwatch.on('leak', function(info) {
-    console.log('Wow! Memory leak detected.');
-    console.dir(info);
-  });
-  memwatch.on('stats', function(stats) {
-    console.log('Memory stats:');
-    console.dir(stats);
-  });
-}
+var rpc_cert = fs.readFileSync(config.rpc_cert);
+var rpc_user = config.rpc_user;
+var rpc_password = config.rpc_password;
 
 var app = express();
 app.set('views', './public/views');
@@ -57,8 +51,61 @@ const PREMINE = 1680000;
 const MINED_DCR_BEFORE_POS = 89401;
 const DCR_TOTAL = PREMINE + MINED_DCR_BEFORE_POS;
 
+var BEST_HEIGHT = 0;
+
 app.use('', site);
 app.use('/api/v1', api);
+
+var ws = new WebSocket('wss://'+config.host+':'+config.rpc_port+'/ws', {
+  headers: {
+    'Authorization': 'Basic '+new Buffer(rpc_user+':'+rpc_password).toString('base64')
+  },
+  cert: rpc_cert,
+  ca: [rpc_cert]
+});
+ws.on('open', function() {
+    console.log('Socket connection opened.');
+
+    /* Update peer list each minute */
+    var activeNodesInterval = setInterval(function() {
+      ws.send('{"jsonrpc":"1.0","id":"0","method":"getpeerinfo","params":[]}');
+    }, 60000);
+});
+
+ws.on('message', function(data, flags) {
+
+    try {
+      data = JSON.parse(data);
+    } catch(e) {
+      console.log(e);
+      return;
+    }
+
+    if (typeof data.result === "object") {
+
+      var peers = data.result.map(function (val) {
+        val.geo = geoip.lookup(val.addr.split(':')[0]);
+        val.best_block = val.currentheight < BEST_HEIGHT ? 'behind' : 'ok';
+        return val;
+      });
+
+      fs.writeFile("./uploads/peers.json", JSON.stringify(peers), function(err) {
+        if(err) {
+            console.error(err);
+            return;
+        }
+        console.log("Peer list updated.");
+        return;
+      });
+    }
+});
+ws.on('error', function(derp) {
+  console.log('ERROR:' + derp);
+});
+ws.on('close', function(data) {
+  console.log('DISCONNECTED');
+  ws = null;
+});
 
 new CronJob('0 */1 * * * *', function() {
   /* Add new blocks */
@@ -213,6 +260,8 @@ function findNewBlock(height) {
       difficulty: data.difficulty,
       num_tickets: data.freshstake
     };
+
+    BEST_HEIGHT = data.height;
 
     Blocks.findOrCreate({where: {hash : insert.hash}, defaults: insert})
       .spread(function(row, created) {

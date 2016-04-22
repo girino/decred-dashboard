@@ -3,6 +3,7 @@ config/config.json
 public/js/metrics.js
 public/robots.txt
 uploads/usd_price.json
+uploads/peers.json
 snippets.js
 .DS_Store
 npm-debug.log

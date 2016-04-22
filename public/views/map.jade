@@ -1,0 +1,21 @@
+doctype html
+html(lang='en')
+  head
+    include ./includes/head.jade
+  body
+    include ./includes/navigation.jade
+    .container
+      .row
+        .col-xs-12.col-sm-12
+          #nodes_map(style='position: relative; width: 100%; height: 500px;')
+      .row
+        .col-xs-12.col-md-12
+          table#nodes-table.table.chart-container
+            tr
+              th City, Country
+              th IP address : host
+              th Latency
+              th Lastblock
+              th Decred software version
+    footer
+      include ./includes/footer.jade

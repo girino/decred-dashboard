@@ -289,6 +289,23 @@ footer div.pluso .pluso-wrap a {
   margin: 3px 3px 0 0;
 }
 
+/* MAP */
+table#nodes-table {
+  background: none;
+}
+
+.node-success {
+  color: #67BB23;;
+}
+
+.node-warning {
+  color: #E6B849;;
+}
+
+.node-danger {
+  color: #E83C3C;
+}
+
 /* blog */
 .articles-header {
   background: url('/img/articles_bg.png');
