@@ -122,6 +122,14 @@ new CronJob('0 */1 * * * *', function() {
 
 }, null, true, 'Europe/Rome');
 
+new CronJob('0 */5 * * * *', function() {
+  /* Get average fees in the mempool */
+  getAverageMempoolFees();
+
+  /* Get PoS mempool */
+  getStakepoolInfo();
+}, null, true, 'Europe/Rome');
+
 new CronJob('*/15 * * * * *', function() {
   console.log('Stats start: ' + new Date());
   getPrices(function(err, result) {
@@ -150,9 +158,6 @@ new CronJob('*/15 * * * * *', function() {
 new CronJob('0 */15 * * * *', function() {
   /* Get prices in USD */
   updateMarketCap();
-
-  /* Calculate average fees in the mempool */
-  calculateAvgFees();
 
   /* Update ticketpoolvalue */
   updateTicketpoolvalue();
@@ -183,8 +188,7 @@ function getPrices(next) {
     var result = {
       blocks : data.blocks,
       difficulty: data.difficulty,
-      networkhashps: data.networkhashps,
-      pooledtx: data.pooledtx
+      networkhashps: data.networkhashps
     };
     console.log('Step 1', result);
     request(BITTREX, function (error, response, body) {
@@ -392,93 +396,50 @@ function parseSStx(sstx, next) {
   }
 }
 
-function calculateAvgFees() {
-  exec("dcrctl getrawmempool", function(error, stdout, stderr) {
+function getAverageMempoolFees() {
+  exec("dcrctl ticketfeeinfo 1 1", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
-      console.error("Error getrawmempool", e);
+      console.error("Error ticketfeeinfo", e);
       return;
     }
 
-    getAllTransactions(0, data, 0, function(err, fees) {
-      if (fees) {
-        Stats.findOne({where : {id : 1}}).then(function(stats) {
-          stats.update({fees : fees.avg, max_fees: fees.max}).catch(function(err) {
-            console.error(err);
-          });
-        }).catch(function(err) {
+    if (data) {
+      Stats.findOne({where : {id : 1}}).then(function(stats) {
+        stats.update({fees : data.feeinfomempool.median, max_fees: data.feeinfomempool.max})
+        .catch(function(err) {
           console.error(err);
         });
-      }
-    });
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }
   });
 }
 
-/**
- * Returns object with avg and max fees in the mempool
- * @param {int} counter
- * @param {array} data
- * @param {float} result
- * @param {function} next
- * @param {float} max_fees (arguments[4])
- */
-function getAllTransactions(counter, data, result, next) {
-  var max_fees = 0;
-  if (arguments[4]) {
-    max_fees = arguments[4];
-  }
-  if (counter < data.length) {
-    request(GET_TX + data[counter], function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log('Parse ' + (counter+1) + ' / ' + data.length + ' transaction: ' + data[counter]);
-        try {
-          var json = JSON.parse(body);
-        } catch(e) {
-          console.error("Bad response from mainnet.decred.org", e);
-          return next(e, null);
-        }
-        
-        // "fees" could be null
-        if (json.fees) {
-          console.log("Fees: ", json.fees);
-          result += json.fees;
-          counter++;
-          if (json.fees > max_fees) {
-            max_fees = json.fees;
-          }
-        } else {
-          data.shift();
-        }
+function getStakepoolInfo() {
+  exec("dcrctl --wallet getstakeinfo", function(error, stdout, stderr) {
+    try {
+      var data = JSON.parse(stdout);
+    } catch(e) {
+      console.error("Error getstakeinfo", e);
+      return;
+    }
 
-        getAllTransactions(counter, data, result, next, max_fees);
-
-      } else {
-        /* if transaction was not found, we want to remove it from array and continue */
-        if (!error && response.statusCode == 404) {
-          var hash = data[counter];
-          data = data.filter(function(value) { return hash != value; });
-          console.log('Handle 404 response from mainnet.decred.org; Transaction was removed from array');
-          
-          getAllTransactions(counter, data, result, next, max_fees);
-        } else {
-          console.error('mainnet.decred.org responded with error:', error);
-          console.error('Status code is: ', response.statusCode);
-          return next(error,null);
-        }
-      }
-    });
-  } else {
-    var fees = {};
-    fees.avg = data.length ? (result / data.length) : 0;
-    fees.max = max_fees;
-    console.log(data.length + ' transactions processed');
-    console.log('Total Fees:' + result);
-    console.log('Avg Fee:' + fees.avg);
-    console.log('Max Fee:' + fees.max);
-
-    return next(null,fees);
-  }
+    if (data) {
+      var pooledtx = data.allmempooltix;
+      data = null;
+      Stats.findOne({where : {id : 1}}).then(function(stats) {
+        stats.update({pooledtx : pooledtx})
+        .catch(function(err) {
+          console.error(err);
+        });
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }
+  });
 }
 
 function checkMissedTickets() {
