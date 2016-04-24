@@ -131,7 +131,7 @@ new CronJob('0 */5 * * * *', function() {
 }, null, true, 'Europe/Rome');
 
 new CronJob('*/15 * * * * *', function() {
-  console.log('Stats start: ' + new Date());
+  console.log('Updating price stats.';
   getPrices(function(err, result) {
     if (err) {
       console.error('Error, could not update price and common statistic.'); 
@@ -145,7 +145,6 @@ new CronJob('*/15 * * * * *', function() {
           stats.update(result).catch(function(err) {
             console.error(err);
           });
-          console.log('Stats end: ' + new Date());
         });
       }).catch(function(err) {
         console.error(err);
@@ -190,7 +189,7 @@ function getPrices(next) {
       difficulty: data.difficulty,
       networkhashps: data.networkhashps
     };
-    console.log('Step 1', result);
+    // console.log('Step 1', result);
     request(BITTREX, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         
@@ -213,7 +212,7 @@ function getPrices(next) {
         result.btc_volume = data['Volume'];
         result.prev_day = data['PrevDay'];
         
-        console.log('Step 2', result);
+        // console.log('Step 2', result);
 
         request(BTCE, function (error, response, body) {
           if (!error && response.statusCode == 200) {
@@ -231,7 +230,7 @@ function getPrices(next) {
             }
 
             result.usd_price = data.last;
-            console.log('Step 3', result);
+            // console.log('Step 3', result);
 
             return next(null, result);
           } else {
@@ -407,10 +406,14 @@ function getAverageMempoolFees() {
 
     if (data) {
       Stats.findOne({where : {id : 1}}).then(function(stats) {
+
         stats.update({fees : data.feeinfomempool.median, max_fees: data.feeinfomempool.max})
-        .catch(function(err) {
+        .then(function(row) {
+          console.log('Average fees: ' + row.fees);
+        }).catch(function(err) {
           console.error(err);
         });
+
       }).catch(function(err) {
         console.error(err);
       });
@@ -431,8 +434,9 @@ function getStakepoolInfo() {
       var pooledtx = data.allmempooltix;
       data = null;
       Stats.findOne({where : {id : 1}}).then(function(stats) {
-        stats.update({pooledtx : pooledtx})
-        .catch(function(err) {
+       stats.update({pooledtx : pooledtx}).then(function(row) {
+         console.log('Mempool size is ' + pooledtx);
+       }).catch(function(err) {
           console.error(err);
         });
       }).catch(function(err) {
