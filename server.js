@@ -559,7 +559,7 @@ function saveNetworkHashrate() {
 function parsePoolsHashrate() {
     Pools.findAll().then(function(pools) {
       for (let pool of pools) {
-        request(pool.url, function (error, response, body) {
+        request({url : pool.url, rejectUnauthorized: false}, function (error, response, body) {
           var json = {};
           if (!error && response.statusCode == 200) {
             try {
