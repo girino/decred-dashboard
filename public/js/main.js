@@ -62,8 +62,8 @@ $(function() {
           $('span.stats-ticketprice').html(ticket_price + ' <span class="hidden-xs">DCR</span>');
           $('span.stats-poolsize').html(numberFormat(response.poolsize));
           $('span.stats-mempool').html(numberFormat(response.pooledtx));
-          var avg_fee = response.fees ? response.fees.toString().substr(0,6) : 0.05;
-          var max_fee = response.max_fees ? response.max_fees.toString().substr(0,6) : 0.05;
+          var avg_fee = response.fees ? response.fees.toString().substr(0,6) : 0;
+          var max_fee = response.max_fees ? response.max_fees.toString().substr(0,6) : 0;
           $('span.stats-fees').html(avg_fee + ' <span class="hidden-xs">DCR</span>');
 
           var est_pos_blocks = 144 - (response.blocks % 144);

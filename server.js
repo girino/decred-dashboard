@@ -131,7 +131,7 @@ new CronJob('0 */5 * * * *', function() {
 }, null, true, 'Europe/Rome');
 
 new CronJob('*/15 * * * * *', function() {
-  console.log('Updating price stats.';
+  console.log('Updating price stats.');
   getPrices(function(err, result) {
     if (err) {
       console.error('Error, could not update price and common statistic.'); 
