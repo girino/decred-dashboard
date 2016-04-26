@@ -88,12 +88,12 @@ $(function() {
         var color = peer.sync == 'ok' ? "node-success" : "node-danger";
 
         var color_latency = "node-success";
-        if (latency > 30 && latency < 300) color_latency = "node-warning";
-        if (latency > 300) color_latency = "node-danger";
+        if (latency > 60 && latency < 600) color_latency = "node-warning";
+        if (latency > 600) color_latency = "node-danger";
 
         var html = '<tr><td>'+city+'</td>';
             html += '<td>'+peer.ip+'</td>';
-            html += '<td class="'+color_latency+'">'+latency+' sec ago</td>';
+            html += '<td class="'+color_latency+'">'+moment.duration(latency, 's').humanize()+'</td>';
             html += '<td class="'+color+'"># '+peer.best_block+'</td>';
             html += '<td>'+peer.version.split('/')[2]+'</td></tr>';
         table.append(html);
