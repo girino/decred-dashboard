@@ -11,7 +11,8 @@
     "base_url": "http://localhost:8080",
     "rpc_cert" : "",
     "rpc_user" : "",
-    "rpc_password" : ""
+    "rpc_password" : "",
+    "seeder_dump_path" : "/change-this-path/dnsseed.dump.json"
   },
   "production": {
     "username": "decred",
@@ -25,6 +26,7 @@
     "base_url": "https://dcrstats.com",
     "rpc_cert" : "",
     "rpc_user" : "",
-    "rpc_password" : ""
+    "rpc_password" : "",
+    "seeder_dump_path" : "/change-this-path/dnsseed.dump.json"
   }
 }

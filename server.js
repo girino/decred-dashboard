@@ -8,7 +8,7 @@ var exec    = require('child_process').exec;
 var CronJob = require('cron').CronJob;
 var fs = require('fs');
 var geoip = require('geoip-lite');
-var WebSocket = require('ws');
+//var WebSocket = require('ws');
 
 var api = require('./routes/api.js');
 var site = require('./routes/site.js');
@@ -56,36 +56,18 @@ var BEST_HEIGHT = 0;
 app.use('', site);
 app.use('/api/v1', api);
 
-var ws = new WebSocket('wss://'+config.host+':'+config.rpc_port+'/ws', {
-  headers: {
-    'Authorization': 'Basic '+new Buffer(rpc_user+':'+rpc_password).toString('base64')
-  },
-  cert: rpc_cert,
-  ca: [rpc_cert]
-});
-ws.on('open', function() {
-    console.log('Socket connection opened.');
-
-    /* Update peer list each minute */
-    var activeNodesInterval = setInterval(function() {
-      ws.send('{"jsonrpc":"1.0","id":"0","method":"getpeerinfo","params":[]}');
-    }, 60000);
-});
-
-ws.on('message', function(data, flags) {
-
-    try {
-      data = JSON.parse(data);
-    } catch(e) {
-      console.log(e);
-      return;
-    }
-
-    if (typeof data.result === "object") {
-
-      var peers = data.result.map(function (val) {
-        val.geo = geoip.lookup(val.addr.split(':')[0]);
-        val.best_block = val.currentheight < BEST_HEIGHT ? 'behind' : 'ok';
+var peersInterval = setInterval(function() {
+      fs.readFile(config.seeder_dump_path, function(err, body) {
+      if (err) { console.log(err); return; }
+      try {
+        var data = JSON.parse(body);
+      } catch(e) {
+        console.log(e); return;
+      }
+      console.log(data);
+      var peers = data.map(function (val) {
+        val.geo = geoip.lookup(val.ip.split(':')[0]);
+        val.sync = val.best_block < BEST_HEIGHT ? 'behind' : 'ok';
         return val;
       });
 
@@ -97,15 +79,8 @@ ws.on('message', function(data, flags) {
         console.log("Peer list updated.");
         return;
       });
-    }
-});
-ws.on('error', function(derp) {
-  console.log('ERROR:' + derp);
-});
-ws.on('close', function(data) {
-  console.log('DISCONNECTED');
-  ws = null;
-});
+      });
+}, 60 * 1000);
 
 new CronJob('0 */1 * * * *', function() {
   /* Add new blocks */

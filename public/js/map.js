@@ -24,8 +24,8 @@ $(function() {
           latitude: peer.geo.ll[0],
           longitude: peer.geo.ll[1],
           nodeName: peer.geo.city ? peer.geo.city + ", " + peer.geo.country : peer.addr + ", " + peer.geo.country ,
-          fillClass: "text-success",
-          fillKey: "success",
+          fillClass: peer.good.trim() == "1" ? "text-success" : "text-danger",
+          fillKey: peer.good.trim() == "1" ? "success" : "danger"
         };
       } else {
         return {
@@ -83,19 +83,19 @@ $(function() {
       peers.forEach(function(peer) {
 
         var city = peer.geo.city ? peer.geo.city + ", " + peer.geo.country : peer.geo.country;
-        var latency = peer.lastrecv - peer.lastsend;
+        var latency = Math.floor(new Date().getTime() / 1000) - parseInt(peer.lastSuccess, 10);
         if (latency < 0) latency = 0;
-        var color = peer.best_block == 'ok' ? "node-success" : "node-danger";
+        var color = peer.sync == 'ok' ? "node-success" : "node-danger";
 
         var color_latency = "node-success";
-        if (latency > 30 && latency < 60) color_latency = "node-warning";
-        if (latency > 60) color_latency = "node-danger";
+        if (latency > 30 && latency < 300) color_latency = "node-warning";
+        if (latency > 300) color_latency = "node-danger";
 
         var html = '<tr><td>'+city+'</td>';
-            html += '<td>'+peer.addr+'</td>';
-            html += '<td class="'+color_latency+'">'+latency+' sec</td>';
-            html += '<td class="'+color+'"># '+peer.currentheight+'</td>';
-            html += '<td>'+peer.subver.split('/')[2]+'</td></tr>';
+            html += '<td>'+peer.ip+'</td>';
+            html += '<td class="'+color_latency+'">'+latency+' sec ago</td>';
+            html += '<td class="'+color+'"># '+peer.best_block+'</td>';
+            html += '<td>'+peer.version.split('/')[2]+'</td></tr>';
         table.append(html);
       });
     }
