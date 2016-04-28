@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<url>
+  <loc>https://dcrstats.com/</loc>
+  <priority>1.00</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/map</loc>
+  <priority>0.80</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/pow</loc>
+  <priority>0.80</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles</loc>
+  <priority>0.65</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles/write-decred-tutorial</loc>
+  <priority>0.65</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles/how-to-mine-decred-in-the-pool-using-nvidia-gpu</loc>
+  <priority>0.50</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles/decred-solo-pos-mining</loc>
+  <priority>0.50</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles/understanding-the-value-of-the-decred-dcr-system</loc>
+  <priority>0.50</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles/running-local-decred-wallet</loc>
+  <priority>0.50</priority>
+  <changefreq>hourly</changefreq>
+</url>
+<url>
+  <loc>https://dcrstats.com/articles/how-to-buy-decred-with-usd-euro</loc>
+  <priority>0.50</priority>
+  <changefreq>hourly</changefreq>
+</url>
+</urlset>

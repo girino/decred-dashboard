@@ -93,7 +93,7 @@ $(function() {
 
         var html = '<tr><td>'+city+'</td>';
             html += '<td>'+peer.ip+'</td>';
-            html += '<td class="'+color_latency+'">'+moment.duration(latency, 's').humanize()+'</td>';
+            html += '<td class="'+color_latency+'">'+moment.duration(latency, 's').humanize()+' ago</td>';
             html += '<td class="'+color+'"># '+peer.best_block+'</td>';
             html += '<td>'+peer.version.split('/')[2]+'</td></tr>';
         table.append(html);
