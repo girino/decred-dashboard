@@ -88,8 +88,8 @@ $(function() {
         var color = peer.sync == 'ok' ? "node-success" : "node-danger";
 
         var color_latency = "node-success";
-        if (latency > 60 && latency < 600) color_latency = "node-warning";
-        if (latency > 600) color_latency = "node-danger";
+        if (latency > 600 && latency < 1200) color_latency = "node-warning";
+        if (latency > 1200) color_latency = "node-danger";
 
         var html = '<tr><td>'+city+'</td>';
             html += '<td>'+peer.ip+'</td>';

@@ -100,15 +100,24 @@ $(function() {
           /***** Hints blocks *****/
 
           /* PoS tickets */
+
+          // Average ticket price in the pool = amount of locked coins divide by number of tickets in the pool
+          var avg_price_in_pool = Math.round((response.ticketpoolvalue / response.poolsize) * 100) / 100;
+
           var html = '';
           if (response.sbits <= response.avg_sbits) {
             if (parseInt(pos_accuracy) >= 75 && response.est_sbits < response.sbits) {
               html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than next estimated ticket price '+response.est_sbits.toString().substr(0,5)+' DCR. <br> Forecast accuracy is '+pos_accuracy+'%. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
             } else {
-              html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than average: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price.</p></div>';
+              var extra_hint = "";
+              if (response.sbits - 2 > avg_price_in_pool) {
+                extra_hint = "But note, that average ticket price in the ticketpool (" + response.pooledtx + " tickets) is much lower: " + avg_price_in_pool + " DCR.";
+              }
+
+              html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than 30-days average price: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price. '+extra_hint+'</p></div>';
             }
           } else {
-            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than 30-days average price '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+            html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than 30-days average price: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
           }
           $('div.hint-pos').html(html);
 
@@ -118,7 +127,7 @@ $(function() {
 
           /* Total locked DCR in PoS */
           $('.poolvalue').html(numberFormat(response.ticketpoolvalue) + ' DCR');
-          var avg_price_in_pool = Math.round((response.ticketpoolvalue / response.poolsize) * 100) / 100;
+          
           var coinsupply = response.coinsupply / 100000000;
           var poolvalue_percent = ((response.ticketpoolvalue / coinsupply) * 100).toString().substr(0,5);
           $('.poolvalue-percent').html(poolvalue_percent + ' %');
@@ -156,7 +165,6 @@ $(function() {
               pos: 0.06 * (total - missed) * response.reward,
               devs: (response.reward * 0.1 * 4095) + 0.1 * (response.blocks - 4095) * response.reward - 0.2 * 0.1 * missed * response.reward
             };
-            console.log(supply);
             drawSupplyChart(supply);
           }
         }
