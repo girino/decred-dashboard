@@ -23,7 +23,7 @@ $(function() {
           radius: 3,
           latitude: peer.geo.ll[0],
           longitude: peer.geo.ll[1],
-          nodeName: peer.geo.city ? peer.geo.city + ", " + peer.geo.country : peer.addr + ", " + peer.geo.country ,
+          nodeName: peer.geo.city ? peer.geo.city + ", " + peer.geo.country : peer.ip + ", " + peer.geo.country ,
           fillClass: peer.good.trim() == "1" ? "text-success" : "text-danger",
           fillKey: peer.good.trim() == "1" ? "success" : "danger"
         };

@@ -111,7 +111,7 @@ $(function() {
             } else {
               var extra_hint = "";
               if (response.sbits - 2 > avg_price_in_pool) {
-                extra_hint = "But note, that average ticket price in the ticketpool (" + response.pooledtx + " tickets) is much lower: " + avg_price_in_pool + " DCR.";
+                extra_hint = "<br>But note, that average ticket price in the ticketpool (" + response.poolsize + " tickets) is much lower: " + avg_price_in_pool + " DCR.";
               }
 
               html = '<div class="hint hint-red"><h4>Time to buy PoS tickets</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is lower than 30-days average price: '+response.avg_sbits.toString().substr(0,4)+' DCR. <br> Hurry to take the best price. '+extra_hint+'</p></div>';
