@@ -29,7 +29,7 @@ router.get('/pos', function (req, res) {
              from blocks group by sbits order by datetime asc`;
   } else {
     var day = parseInt(req.query.time);
-    if (isNaN(day)) { 
+    if (isNaN(day)) {
       day = 365;
     }
 
@@ -103,13 +103,31 @@ router.get('/pos', function (req, res) {
   });
 });
 
+router.get('/popular_ticket_prices', function(req, res) {
+  let query = {
+    attributes: ['sbits',[sequelize.fn('SUM', sequelize.col('num_tickets')), 'blocks']],
+    where: {
+      height: {$gt : 4895}
+    },
+    group: ['sbits'],
+    order: 'sbits ASC'
+  };
+
+  Blocks.findAll(query).then(function(result) {
+    return res.status(200).json(result);
+  }).catch(function(err) {
+    console.log(err);
+    res.status(500).json({error : true});
+  });
+});
+
 router.get('/difficulty', function(req, res) {
   if (!req.query.time || req.query.time == '365') {
     var query = `SELECT DISTINCT(difficulty), MIN(datetime) as datetime
              from blocks group by difficulty order by datetime asc`;
   } else {
     var day = parseInt(req.query.time);
-    if (isNaN(day)) { 
+    if (isNaN(day)) {
       day = 365;
     }
     var datetime = Math.floor((new Date()) / 1000) - day * 24 * 60 * 60;
@@ -135,7 +153,7 @@ router.get('/hashrate', function(req, res) {
                  from hashrate group by networkhashps order by timestamp asc`;
   } else {
     var day = parseInt(req.query.time);
-    if (isNaN(day)) { 
+    if (isNaN(day)) {
       day = 365;
     }
     var datetime = Math.floor((new Date()) / 1000) - day * 24 * 60 * 60;
@@ -170,8 +188,8 @@ router.get('/pools', function(req, res) {
       var soloMiners = Math.round((stats.networkhashps / 1000 / 1000 / 1000 - total) * 100) / 100;
       if (soloMiners > 0) {
         result.push({
-          workers: '-', 
-          name : 'Solo miners', 
+          workers: '-',
+          name : 'Solo miners',
           y : soloMiners
         });
       }
@@ -190,7 +208,7 @@ router.get('/prices', function (req, res) {
   var ticker = req.query.ticker;
 
   if (ticker != 'btc' && ticker != 'usd') {
-    res.status(500).json({error : true}); 
+    res.status(500).json({error : true});
     return;
   }
   fs.readFile('./uploads/prices.json', 'utf8', function (err, data) {
@@ -219,8 +237,8 @@ router.get('/estimated_ticket_price', function (req, res) {
 
   console.log('Estimated ticket price start: ', (new Date()).getTime());
   let query = {
-    attributes: ['datetime', 'estimated_ticket_price'], 
-    order: 'height DESC', 
+    attributes: ['datetime', 'estimated_ticket_price'],
+    order: 'height DESC',
     limit: 720
   };
   Blocks.findAll(query).then(function(blocks) {
@@ -238,7 +256,7 @@ router.get('/estimated_ticket_price', function (req, res) {
 
 router.get('/get_stats', function (req, res) {
   Stats.findOne({where : {id : 1}}).then(function(stats) {
-    
+
     if (!stats) {
       res.status(500).json({error : true});
       return;
