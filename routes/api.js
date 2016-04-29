@@ -47,11 +47,9 @@ router.get('/pos', function (req, res) {
       }
       sbits.push([row.datetime * 1000, row.sbits]);
     }
-    if (req.query.data == "sbits") {
-      result.sbits = sbits;
-      res.status(200).json(result);
-      return;
-    }
+    result.sbits = sbits;
+    res.status(200).json(result);
+    return;
   }).catch(function(err) {
     console.log(err);
     res.status(500).json({error : true});
@@ -82,7 +80,7 @@ router.get('/popular_ticket_prices', function(req, res) {
     }
     var output = [];
     for (let row in processed) {
-      output.push([row, processed[row] ]);
+      output.push([parseInt(row,10), processed[row] ]);
     }
     return res.status(200).json(output);
   }).catch(function(err) {
