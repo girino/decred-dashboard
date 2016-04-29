@@ -22,7 +22,6 @@ const DCR_TOTAL = PREMINE + MINED_DCR_BEFORE_POS;
 
 router.get('/pos', function (req, res) {
   var result = {};
-  var poolsize = [];
   var sbits = [];
   if (!req.query.time || req.query.time == '365') {
     var query = `SELECT DISTINCT(sbits), MIN(datetime) as datetime
@@ -53,50 +52,6 @@ router.get('/pos', function (req, res) {
       res.status(200).json(result);
       return;
     }
-    /* TODO: refactoring! */
-    if (req.query.time == '7') {
-
-      var sbits_query = {order: 'datetime ASC'};
-      if (day) {
-        sbits_query.where = {datetime: {$gt : datetime}};
-      }
-      Blocks.findAll(sbits_query).then(function(data) {
-        for (let day of data) {
-          poolsize.push([day.datetime * 1000, day.poolsize]);
-        }
-        result = {
-          sbits: sbits,
-          poolsize: poolsize
-        };
-
-        res.status(200).json(result);
-      }).catch(function(err) {
-        console.log(err);
-        res.status(500).json({error : true});
-      });
-
-    } else {
-
-      var sbits_query = {order: 'timestamp ASC'};
-      if (datetime) {
-        sbits_query.where = {timestamp: {$gt : datetime}};
-      }
-      PosAvg.findAll(sbits_query).then(function(data) {
-        for (let day of data) {
-          poolsize.push([day.timestamp * 1000, day.poolsize_max]);
-        }
-        result = {
-          sbits: sbits,
-          poolsize: poolsize
-        };
-
-        res.status(200).json(result);
-      }).catch(function(err) {
-        console.log(err);
-        res.status(500).json({error : true});
-      });
-
-    }
   }).catch(function(err) {
     console.log(err);
     res.status(500).json({error : true});
@@ -104,8 +59,9 @@ router.get('/pos', function (req, res) {
 });
 
 router.get('/popular_ticket_prices', function(req, res) {
+  var raw = req.query.raw || false;
   let query = {
-    attributes: ['sbits',[sequelize.fn('SUM', sequelize.col('num_tickets')), 'blocks']],
+    attributes: ['sbits',[sequelize.fn('SUM', sequelize.col('num_tickets')), 'num_tickets']],
     where: {
       height: {$gt : 4895}
     },
@@ -114,7 +70,21 @@ router.get('/popular_ticket_prices', function(req, res) {
   };
 
   Blocks.findAll(query).then(function(result) {
-    return res.status(200).json(result);
+    if (raw) {
+      return res.status(200).json(result);
+    }
+    var processed = [];
+    for (let item of result) {
+      let sbits = Math.ceil(item.sbits);
+      let key = sbits - 1;
+      let num_tickets = parseInt(item.num_tickets, 10);
+      processed[key] = processed[key] ? processed[key] + num_tickets : num_tickets;
+    }
+    var output = [];
+    for (let row in processed) {
+      output.push([row, processed[row] ]);
+    }
+    return res.status(200).json(output);
   }).catch(function(err) {
     console.log(err);
     res.status(500).json({error : true});

@@ -73,7 +73,7 @@ html(lang='en')
             span.stats-title Estimated ticket price
             ins.est-pos-price
             p.small-text
-              | Forecast accuracy: 
+              | Forecast accuracy:
               b.est-pos-price-accuracy
         .col-xs-6.col-md-3
           .hint.hint-red.hint-md
@@ -101,13 +101,13 @@ html(lang='en')
           .hint.hint-blue
             h4 Locked DCR in PoS-mining
             p
-              | Current PoS pool value is 
+              | Current PoS pool value is
               b.poolvalue - DCR
-              | . It is 
+              | . It is
               b.poolvalue-percent x%
               |  of total available supply.
               br
-              | Average ticket price in the pool is 
+              | Average ticket price in the pool is
               span.avg-price-in-pos-pool - DCR
               | .
       .row
@@ -121,15 +121,7 @@ html(lang='en')
           #price-chart.chart-container
       .row
         .col-xs-12.col-sm-12
-          .btn-toolbar(role='toolbar')
-            .btn-group.pos-group
-              button.btn-chart.btn.btn-default(type='button', data-period="7", data-chart="poolsize")
-                span Week
-              button.btn-chart.btn.btn-default(type='button', data-period="30", data-chart="poolsize")
-                span Month
-              button.btn-chart.btn.btn-default.active(type='button', data-period="365", data-chart="poolsize")
-                span Year
-          #pos-poolsize.chart-container
+          #pos-tickets-history.chart-container
       .row
         .col-xs-12.col-sm-12
           .btn-toolbar(role='toolbar')

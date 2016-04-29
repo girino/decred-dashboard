@@ -54,7 +54,7 @@ $(function() {
            * 2.09999999 -> 2.10
            */
           ticket_price = parseFloat(ticket_price);
-          if (response.sbits > ticket_price) { 
+          if (response.sbits > ticket_price) {
             ticket_price = Math.round((ticket_price + 0.01) * 100) / 100;
           }
 
@@ -84,7 +84,7 @@ $(function() {
           $('.pow-block-reward').html('<span class="hidden-xs"><b>PoW-reward</b>: </span><span class="visible-xs-block"><b>PoW</b>: </span>' + (block_reward * 0.6).toString().substr(0,6) + ' DCR');
           $('.pos-block-reward').html('<span><b>PoS vote</span></b>: ' + (block_reward * 0.3 / 5).toString().substr(0,6) + ' DCR');
           $('.dev-block-reward').html('<span class="hidden-xs"><b>Dev subsidy</b>: </span><span class="visible-xs-block"><b>Devs</b>: </span>' + (block_reward * 0.1).toString().substr(0,6) + ' DCR');
-          
+
           var next_block_subsidy = getEstimatedBlockReward(Math.ceil(response.blocks / 6144), response.reward);
           $('.est-block-reward').html(next_block_subsidy.toString().substr(0,5) + ' DCR');
 
@@ -127,7 +127,7 @@ $(function() {
 
           /* Total locked DCR in PoS */
           $('.poolvalue').html(numberFormat(response.ticketpoolvalue) + ' DCR');
-          
+
           var coinsupply = response.coinsupply / 100000000;
           var poolvalue_percent = ((response.ticketpoolvalue / coinsupply) * 100).toString().substr(0,5);
           $('.poolvalue-percent').html(poolvalue_percent + ' %');
@@ -195,18 +195,11 @@ $(function () {
         type: 'GET',
         dataType: "json",
         success: function (data) {
-          if (chart == 'poolsize') {
-            drawPoolsize(data.poolsize);
-          }
           if (chart == 'sbits') {
             drawSbits(data.sbits);
           }
-          setTimeout(function() {
-            $('.highcharts-button').remove();
-            $("text:contains(Highcharts.com)").remove();
-          }, 1000);
         }
-      });      
+      });
     });
 
     $('.price-group .btn-chart').on('click', function(e) {
@@ -225,17 +218,22 @@ $(function () {
       type: 'GET',
       dataType: "json",
       success: function (data) {
-        drawPoolsize(data.poolsize);
         drawSbits(data.sbits);
       }
     });
 
-    updatePricesChart('usd');
+    $.ajax({
+      url: '/api/v1/popular_ticket_prices?'+nonce,
+      type: 'GET',
+      dataType: "json",
+      success: function (data) {
+        if (!data.error) {
+          drawTicketsHistory(data);
+        }
+      }
+    });
 
-    setTimeout(function(){
-      $('.highcharts-button').remove();
-      $("text:contains(Highcharts.com)").remove();
-    }, 2000);
+    updatePricesChart('usd');
 });
 
 function updatePricesChart(ticker) {
@@ -250,10 +248,6 @@ function updatePricesChart(ticker) {
     success: function (data) {
       if (!data.error) {
         drawPrice(data, ticker);
-          setTimeout(function() {
-            $('.highcharts-button').remove();
-            $("text:contains(Highcharts.com)").remove();
-          }, 500);
       }
     }
   });
@@ -274,7 +268,7 @@ function numberFormat(number) {
 
 function secondsToTime(secs) {
   var hours = Math.floor(secs / (60 * 60));
-  
+
   var divisor_for_minutes = secs % (60 * 60);
   var minutes = Math.floor(divisor_for_minutes / 60);
   if (minutes < 10) {
