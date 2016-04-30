@@ -35,6 +35,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
+    est_sbits_min: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    est_sbits_max: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
     ticketpoolvalue: {
       type: DataTypes.DOUBLE,
       allowNull: true

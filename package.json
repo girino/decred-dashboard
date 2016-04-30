@@ -1,6 +1,6 @@
 {
   "name": "decred",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "apps": [
     {
@@ -16,26 +16,11 @@
         "COMMON_ENV_VAR": "true",
         "NODE_ENV": "production"
       }
-    },
-    {
-      "name": "Difficulty app",
-      "script": "bin/difficulty.js",
-      "node_args": [
-        "--harmony"
-      ],
-      "args": [
-        "difficulty_app"
-      ],
-      "env": {
-        "COMMON_ENV_VAR": "true",
-        "NODE_ENV": "production"
-      }
     }
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "big-integer": "^1.6.12",
     "body-parser": "^1.14.2",
     "cron": "^1.1.0",
     "email-validator": "^1.0.4",
@@ -46,10 +31,6 @@
     "nodemailer": "^2.3.0",
     "pg": "^4.4.4",
     "request": "^2.69.0",
-    "sequelize": "^3.19.0",
-    "ws": "^1.1.0"
-  },
-  "devDependencies": {
-    "memwatch-next": "^0.2.10"
+    "sequelize": "^3.19.0"
   }
 }

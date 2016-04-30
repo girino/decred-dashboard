@@ -45,7 +45,6 @@ html(lang='en')
       .row
         .col-xs-6.col-md-3
           p.stats-block
-            //span.real-pos-price.glyphicon.glyphicon-question-sign(title="")
             span.stats-title Ticket Price:
             span.stats-content.stats-ticketprice -
         .col-xs-6.col-md-3
@@ -73,8 +72,11 @@ html(lang='en')
             span.stats-title Estimated ticket price
             ins.est-pos-price
             p.small-text
-              | Forecast accuracy:
-              b.est-pos-price-accuracy
+              b Min:&nbsp;
+              span.min-est-pos
+            p.small-text
+              b Max:&nbsp;
+              span.max-est-pos
         .col-xs-6.col-md-3
           .hint.hint-red.hint-md
             span.stats-title Block reward
@@ -101,13 +103,13 @@ html(lang='en')
           .hint.hint-blue
             h4 Locked DCR in PoS-mining
             p
-              | Current PoS pool value is
+              | Current PoS pool value is&nbsp;
               b.poolvalue - DCR
-              | . It is
+              | . It is&nbsp;
               b.poolvalue-percent x%
               |  of total available supply.
               br
-              | Average ticket price in the pool is
+              | Average ticket price in the pool is&nbsp;
               span.avg-price-in-pos-pool - DCR
               | .
       .row

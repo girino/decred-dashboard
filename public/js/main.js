@@ -68,7 +68,6 @@ $(function() {
 
           var est_pos_blocks = 144 - (response.blocks % 144);
           var est_pos_time = secondsToTime(est_pos_blocks * response.average_time);
-          var pos_accuracy = ((response.blocks % 144) / 144 * 100).toString().substr(0,4);
 
           $('.est-pos-time').html('in '+est_pos_time.hours+' hours '+est_pos_time.minutes+' minutes');
           $('.est-pos-blocks').html('<b>' + est_pos_blocks + '</b> blocks left');
@@ -77,7 +76,8 @@ $(function() {
           } else {
             $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: rgb(220, 42, 42);"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
           }
-          $('.est-pos-price-accuracy').html(pos_accuracy  + '%');
+          $('.min-est-pos').html(response.est_sbits_min.toString().substr(0,5) + ' DCR');
+          $('.min-est-pos').html(response.est_sbits_max.toString().substr(0,5) + ' DCR');
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
           $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');
@@ -106,8 +106,8 @@ $(function() {
 
           var html = '';
           if (response.sbits <= response.avg_sbits) {
-            if (parseInt(pos_accuracy) >= 75 && response.est_sbits < response.sbits) {
-              html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than next estimated ticket price '+response.est_sbits.toString().substr(0,5)+' DCR. <br> Forecast accuracy is '+pos_accuracy+'%. <br> We suggest to wait for the PoS-difficulty adjustment.</p></div>';
+            if (response.est_sbits < response.sbits) {
+              html = '<div class="hint hint-red"><h4>Don\'t buy new PoS tickets right now</h4> <p>Current ticket price <b>'+ticket_price+' DCR</b> is higher than next estimated ticket price '+response.est_sbits.toString().substr(0,5)+' DCR. <br>We suggest to wait for the PoS-difficulty adjustment.</p></div>';
             } else {
               var extra_hint = "";
               if (response.sbits - 2 > avg_price_in_pool) {

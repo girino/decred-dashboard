@@ -8,7 +8,6 @@ var exec    = require('child_process').exec;
 var CronJob = require('cron').CronJob;
 var fs = require('fs');
 var geoip = require('geoip-lite');
-//var WebSocket = require('ws');
 
 var api = require('./routes/api.js');
 var site = require('./routes/site.js');
@@ -109,7 +108,7 @@ new CronJob('*/15 * * * * *', function() {
   console.log('Updating price stats.');
   getPrices(function(err, result) {
     if (err) {
-      console.error('Error, could not update price and common statistic.'); 
+      console.error('Error, could not update price and common statistic.');
       return;
     } else {
       Stats.findOrCreate({where : {id : 1}, defaults : result }).spread(function(stats, created) {
@@ -167,7 +166,7 @@ function getPrices(next) {
     // console.log('Step 1', result);
     request(BITTREX, function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        
+
         try {
           data = JSON.parse(body);
         } catch(e) {
@@ -186,12 +185,12 @@ function getPrices(next) {
         result.btc_last = data['Last'];
         result.btc_volume = data['Volume'];
         result.prev_day = data['PrevDay'];
-        
+
         // console.log('Step 2', result);
 
         request(BTCE, function (error, response, body) {
           if (!error && response.statusCode == 200) {
-            
+
             try {
               data = JSON.parse(body);
             } catch(e) {
@@ -258,6 +257,8 @@ function findNewBlock(height) {
                 console.log(err);
               });
 
+              updateEstimatedTicketPrice(row.hash);
+
               findNewBlock(height + 1);
             });
           });
@@ -282,7 +283,7 @@ function updateDailyAveragePoS (timestamp, new_poolsize, new_sbits, next) {
   var untildate = new Date(next_day).getTime();
   untildate = parseInt(untildate / 1000, 10);
 
-  PosAvg.findOrCreate({where : {day : day}}).spread(function(average, created) { 
+  PosAvg.findOrCreate({where : {day : day}}).spread(function(average, created) {
     Blocks.findAll({where : {datetime: {
       $lt: untildate,
       $gt: fromdate
@@ -291,7 +292,7 @@ function updateDailyAveragePoS (timestamp, new_poolsize, new_sbits, next) {
     var count = rows.length;
     var poolsize = 0;
     var sbits = 0;
-      
+
     for (let row of rows) {
       poolsize += row.poolsize;
       sbits += row.sbits;
@@ -301,8 +302,8 @@ function updateDailyAveragePoS (timestamp, new_poolsize, new_sbits, next) {
     sbits = sbits / count;
 
     var update = {
-      poolsize : poolsize, 
-      sbits : sbits, 
+      poolsize : poolsize,
+      sbits : sbits,
       timestamp : fromdate
     };
 
@@ -318,12 +319,12 @@ function updateDailyAveragePoS (timestamp, new_poolsize, new_sbits, next) {
     if (!average.sbits_max || average.sbits_max < new_sbits ) {
       update.sbits_max = new_sbits;
     }
-      
+
     average.update(update)
       .then(function(updated) {
          next(null, updated);
-      }).catch(function(err) { 
-        next(err, null); 
+      }).catch(function(err) {
+        next(err, null);
       });
   });
   });
@@ -427,7 +428,7 @@ function checkMissedTickets() {
     attributes: ['voters', [sequelize.fn('COUNT', sequelize.col('id')), 'blocks']],
     where: {
       voters: {$ne : 0}
-    }, 
+    },
     group: ['voters']
   };
 
@@ -571,6 +572,39 @@ function updateCoinSupply() {
     }).catch(function(err) {
       console.error(err);
     });
+  });
+}
+
+function updateEstimatedTicketPrice(hash) {
+  exec("dcrctl estimatestakediff", function(error, stdout, stderr) {
+    try {
+      var data = JSON.parse(stdout);
+    } catch(e) {
+      console.error("Error estimatestakediff", e);
+      return;
+    }
+
+    if (data.expected) {
+
+      Stats.findOne({where : {id : 1}}).then(function(stats) {
+        var update = {
+          est_sbits : data.expected,
+          est_sbits_min : data.min,
+          est_sbits_max : data.max,
+          prev_est_sbits : stats.est_sbits
+        };
+        return stats.update(update);
+      }).catch(function(err) {
+        console.error(err);
+      });
+
+      Blocks.findOne({where : {hash : hash}}).then(function(row) {
+        return row.update({estimated_ticket_price : data.expected});
+      }).catch(function(err) {
+        console.error(err);
+      });
+    }
+
   });
 }
 
