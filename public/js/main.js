@@ -77,7 +77,7 @@ $(function() {
             $('.est-pos-price').html('<i class="fa fa-long-arrow-up" style="color: rgb(220, 42, 42);"></i>' + response.est_sbits.toString().substr(0,5) + ' DCR');
           }
           $('.min-est-pos').html(response.est_sbits_min.toString().substr(0,5) + ' DCR');
-          $('.min-est-pos').html(response.est_sbits_max.toString().substr(0,5) + ' DCR');
+          $('.max-est-pos').html(response.est_sbits_max.toString().substr(0,5) + ' DCR');
 
           var block_reward = getEstimatedBlockReward(Math.ceil(response.blocks / 6144) - 1, response.reward);
           $('.block-reward').html(block_reward.toString().substr(0,5) + ' DCR');

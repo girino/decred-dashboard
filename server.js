@@ -110,7 +110,7 @@ new CronJob('*/15 * * * * *', function() {
     if (err) {
       console.error('Error, could not update price and common statistic.');
       return;
-    } else {
+    } else if (result) {
       Stats.findOrCreate({where : {id : 1}, defaults : result }).spread(function(stats, created) {
         let timestamp = Math.floor(new Date() / 1000) - 30 * 24 * 60 * 60;
         let query = 'SELECT AVG(DISTINCT(sbits)) as sbits FROM blocks WHERE datetime >= ' + timestamp;
