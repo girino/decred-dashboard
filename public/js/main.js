@@ -214,7 +214,7 @@ $(function () {
     });
 
     $.ajax({
-      url: '/api/v1/pos?'+nonce,
+      url: '/api/v1/pos?time=7&nonce='+nonce,
       type: 'GET',
       dataType: "json",
       success: function (data) {
