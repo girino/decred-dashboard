@@ -23,6 +23,7 @@ var app = express();
 app.set('views', './public/views');
 app.set('view engine', 'jade');
 
+console.log('Starting app in ' + env + ' environment.');
 // in production we are using Nginx to deliver static files
 if (env == 'development') {
   app.use(express.static('public'));
@@ -37,6 +38,9 @@ var Stats = require('./models').Stats;
 var Hashrate = require('./models').Hashrate;
 var Pools = require('./models').Pools;
 
+var PRICE_SOURCE = 'poloniex';
+
+const POLONIEX = 'https://poloniex.com/public?command=returnTicker';
 const BITTREX = 'https://bittrex.com/api/v1.1/public/getmarketsummary?market=btc-dcr';
 const BTCE = 'https://btc-e.com/api/3/ticker/btc_usd';
 const MARKET_CAP = 'https://api.coinmarketcap.com/v1/datapoints/decred/';
@@ -163,8 +167,9 @@ function getPrices(next) {
       difficulty: data.difficulty,
       networkhashps: data.networkhashps
     };
-    // console.log('Step 1', result);
-    request(BITTREX, function (error, response, body) {
+
+    var price_source = PRICE_SOURCE == 'poloniex' ? POLONIEX : BITTREX;
+    request(price_source, function (error, response, body) {
       if (!error && response.statusCode == 200) {
 
         try {
@@ -173,20 +178,31 @@ function getPrices(next) {
           return next(e,null);
         }
 
-        data = data.result[0];
+        if (PRICE_SOURCE == 'poloniex') {
+          data = data['BTC_DCR'];
+          if (!data) {
+            console.log('Poloniex error');
+            return next(body,null);
+          }
+          result.btc_high = data['high24hr'];
+          result.btc_low = data['low24hr'];
+          result.btc_last = data['last'];
+          result.btc_volume = data['baseVolume'];
+          result.prev_day = data['percentChange'] < 0 ? 0 : 9999;
+        } else {
 
-        if (!data) {
-          console.log('Bittrex error');
-          return next(body,null);
+          data = data.result[0];
+          if (!data) {
+            console.log('Bittrex error');
+            return next(body,null);
+          }
+
+          result.btc_high = data['High'];
+          result.btc_low = data['Low'];
+          result.btc_last = data['Last'];
+          result.btc_volume = data['Volume'];
+          result.prev_day = data['PrevDay'];
         }
-
-        result.btc_high = data['High'];
-        result.btc_low = data['Low'];
-        result.btc_last = data['Last'];
-        result.btc_volume = data['Volume'];
-        result.prev_day = data['PrevDay'];
-
-        // console.log('Step 2', result);
 
         request(BTCE, function (error, response, body) {
           if (!error && response.statusCode == 200) {
