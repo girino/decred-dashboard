@@ -188,7 +188,7 @@ function getPrices(next) {
           result.btc_low = data['low24hr'];
           result.btc_last = data['last'];
           result.btc_volume = data['baseVolume'];
-          result.prev_day = data['percentChange'] < 0 ? 0 : 9999;
+          result.prev_day = data['percentChange'] < 0 ? 9999 : 0;
         } else {
 
           data = data.result[0];
