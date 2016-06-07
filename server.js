@@ -60,7 +60,8 @@ app.use('', site);
 app.use('/api/v1', api);
 
 var peersInterval = setInterval(function() {
-      fs.readFile(config.seeder_dump_path, function(err, body) {
+      //fs.readFile(config.seeder_dump_path, function(err, body) {
+   exec("/opt/go/bin/dcrctl getpeerinfo", function(err, body, stderr) {
       if (err) { console.log(err); return; }
       try {
         var data = JSON.parse(body);
@@ -69,8 +70,12 @@ var peersInterval = setInterval(function() {
       }
       console.log(data);
       var peers = data.map(function (val) {
+        val.ip = val.addr;
         val.geo = geoip.lookup(val.ip.split(':')[0]);
+	val.best_block = val.currentheight;
         val.sync = val.best_block < BEST_HEIGHT ? 'behind' : 'ok';
+        val.good = val.best_block < BEST_HEIGHT ? '0' : '1';
+        val.version = val.subver;
         return val;
       });
 
@@ -85,11 +90,14 @@ var peersInterval = setInterval(function() {
       });
 }, 60 * 1000);
 
-new CronJob('0 */1 * * * *', function() {
+//new CronJob('0 */1 * * * *', function() {
+new CronJob('0 22 10 * * *', function() {
   /* Add new blocks */
   Blocks.findOne({order: 'height DESC', limit: 1}).then(function(block) {
     var newHeight = block ? (block.height + 1) : 1;
+    //newHeight=newHeight < 34400?34400:newHeight;
     console.log("Searching new blocks with height >= " + newHeight);
+    console.error("Searching new blocks with height >= " + newHeight);
     findNewBlock(newHeight);
   }).catch(function(err) {
     console.log(err);
@@ -98,7 +106,7 @@ new CronJob('0 */1 * * * *', function() {
   /* Count total missed tickets */
   checkMissedTickets();
 
-}, null, true, 'Europe/Rome');
+}, null, true, 'America/Sao_Paulo');
 
 new CronJob('0 */5 * * * *', function() {
   /* Get average fees in the mempool */
@@ -152,20 +160,21 @@ new CronJob('0 */30 * * * *', function() {
 }, null, true, 'Europe/Rome');
 
 function getPrices(next) {
-  exec("dcrctl getmininginfo", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl getmininginfo", function(error, stdout, stderr) {
     if (error || stderr) {
       console.error(error, stderr); return next(error, null);
     }
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
-      console.log('dcrctl getmininginfo error');
+      console.log('/opt/go/bin/dcrctl getmininginfo error');
       return next(e,null);
     }
     var result = {
       blocks : data.blocks,
       difficulty: data.difficulty,
-      networkhashps: data.networkhashps
+      networkhashps: data.networkhashps,
+      pooledtx: data.pooledtx
     };
 
     var price_source = PRICE_SOURCE == 'poloniex' ? POLONIEX : BITTREX;
@@ -347,8 +356,10 @@ function updateDailyAveragePoS (timestamp, new_poolsize, new_sbits, next) {
 }
 
 function parseSStx(sstx, next) {
+  console.log(sstx);
   var yes_votes = 0;
   var counter = 1;
+  if (sstx) {
   for (let tx of sstx) {
     exec("bash ./parsesstx.sh " + tx, function(error, stdout, stderr) {
       if (error || stderr) {
@@ -385,10 +396,13 @@ function parseSStx(sstx, next) {
       counter++;
     });
   }
+  } else {
+        return next(null, yes_votes);
+  } // if sstx
 }
 
 function getAverageMempoolFees() {
-  exec("dcrctl ticketfeeinfo 1 1", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl ticketfeeinfo 1 1", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
@@ -414,7 +428,7 @@ function getAverageMempoolFees() {
 }
 
 function getStakepoolInfo() {
-  exec("dcrctl --wallet getstakeinfo", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl --wallet getstakeinfo", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
@@ -496,7 +510,7 @@ function updateMarketCap() {
 }
 
 function saveNetworkHashrate() {
-  exec("dcrctl getmininginfo", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl getmininginfo", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
@@ -554,7 +568,7 @@ function parsePoolsHashrate() {
 }
 
 function updateTicketpoolvalue() {
-  exec("dcrctl getticketpoolvalue", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl getticketpoolvalue", function(error, stdout, stderr) {
     try {
       var price = parseInt(stdout, 10);
     } catch(e) {
@@ -573,7 +587,7 @@ function updateTicketpoolvalue() {
 }
 
 function updateCoinSupply() {
-  exec("dcrctl getcoinsupply", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl getcoinsupply", function(error, stdout, stderr) {
     try {
       var supply = parseInt(stdout, 10);
     } catch(e) {
@@ -592,7 +606,7 @@ function updateCoinSupply() {
 }
 
 function updateEstimatedTicketPrice(hash) {
-  exec("dcrctl estimatestakediff", function(error, stdout, stderr) {
+  exec("/opt/go/bin/dcrctl estimatestakediff", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {

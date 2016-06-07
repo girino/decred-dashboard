@@ -73,7 +73,7 @@ router.post('/articles/write-decred-tutorial', function(req, res) {
     var transporter = nodemailer.createTransport('smtps://dcrstats%40gmail.com:'+config.email_pass+'@smtp.gmail.com');
     var mailOptions = {
         from: '"Decred Tutorials" <dcrstats@gmail.com>',
-        to: 'info@dcrstats.com',
+        to: 'info@girino.org',
         subject: 'New Tutorial submited by ' + name,
         text: tutorial + '\n\nEmail: ' + email + '\n\nLink:' + link
     };
