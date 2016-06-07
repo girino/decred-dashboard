@@ -61,7 +61,7 @@ app.use('/api/v1', api);
 
 var peersInterval = setInterval(function() {
       //fs.readFile(config.seeder_dump_path, function(err, body) {
-   exec("/opt/go/bin/dcrctl getpeerinfo", function(err, body, stderr) {
+   exec(config.dcrctl_path + " getpeerinfo", function(err, body, stderr) {
       if (err) { console.log(err); return; }
       try {
         var data = JSON.parse(body);
@@ -91,7 +91,7 @@ var peersInterval = setInterval(function() {
 }, 60 * 1000);
 
 //new CronJob('0 */1 * * * *', function() {
-new CronJob('0 22 10 * * *', function() {
+new CronJob('0 40 0 * * *', function() {
   /* Add new blocks */
   Blocks.findOne({order: 'height DESC', limit: 1}).then(function(block) {
     var newHeight = block ? (block.height + 1) : 1;
@@ -160,7 +160,7 @@ new CronJob('0 */30 * * * *', function() {
 }, null, true, 'Europe/Rome');
 
 function getPrices(next) {
-  exec("/opt/go/bin/dcrctl getmininginfo", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " getmininginfo", function(error, stdout, stderr) {
     if (error || stderr) {
       console.error(error, stderr); return next(error, null);
     }
@@ -246,53 +246,67 @@ function getPrices(next) {
 }
 
 function findNewBlock(height) {
-  exec("bash ./parseblocks.sh " + height, function(error, stdout, stderr) {
-    if (error || stderr) {
-      return;
-    }
+  //blockhash=$(dcrctl getblockhash $block);
+  //dcrctl getblock $blockhash
+  exec(config.dcrctl_path + " getblockhash " + height, function(error1, stdout1, stderr1) {
+		console.error(config.dcrctl_path + " getblockhash " + height);
+		if (error1 || stderr1) {
+    			console.error("findNewBlock error: " + error1);
+    			console.error("findNewBlock stderr: " + stderr1);
+			return;
+		}
+		//var hash = JSON.parse(stdout1);
+		var hash = stdout1.trim();
+    console.error("*** got block hash: " + hash);
+    console.log("*** got block hash: " + hash);
+    exec(config.dcrctl_path + " getblock " + hash, function(error, stdout, stderr) {
+			if (error || stderr) {
+				return;
+			}
 
-    var data = JSON.parse(stdout);
-    var insert = {
-      hash : data.hash,
-      height: data.height,
-      datetime: data.time,
-      voters: data.voters,
-      poolsize: data.poolsize,
-      sbits: data.sbits,
-      difficulty: data.difficulty,
-      num_tickets: data.freshstake
-    };
+			var data = JSON.parse(stdout);
+			var insert = {
+				hash : data.hash,
+				height: data.height,
+				datetime: data.time,
+				voters: data.voters,
+				poolsize: data.poolsize,
+				sbits: data.sbits,
+				difficulty: data.difficulty,
+				num_tickets: data.freshstake
+			};
 
-    BEST_HEIGHT = data.height;
+			BEST_HEIGHT = data.height;
 
-    Blocks.findOrCreate({where: {hash : insert.hash}, defaults: insert})
-      .spread(function(row, created) {
-        if (created) {
-          console.log('New block was added, height: ' + height);
-          updateDailyAveragePoS(row.datetime, row.poolsize, row.sbits, function(err, updated) {
-            if (err) {
-              console.error(err);
-            }
-            parseSStx(data.stx, function(err, yes_votes) {
-              if (err) {
-                console.error(err);
-              }
+			Blocks.findOrCreate({where: {hash : insert.hash}, defaults: insert})
+				.spread(function(row, created) {
+					if (created) {
+						console.log('New block was added, height: ' + height);
+						updateDailyAveragePoS(row.datetime, row.poolsize, row.sbits, function(err, updated) {
+							if (err) {
+								console.error(err);
+							}
+							parseSStx(data.stx, function(err, yes_votes) {
+								if (err) {
+									console.error(err);
+								}
 
-              row.update({yes_votes : yes_votes}).catch(function(err) {
-                console.log(err);
-              });
+								row.update({yes_votes : yes_votes}).catch(function(err) {
+									console.log(err);
+								});
 
-              updateEstimatedTicketPrice(row.hash);
+								updateEstimatedTicketPrice(row.hash);
 
-              findNewBlock(height + 1);
-            });
-          });
-        } else {
-          console.log('No new blocks found');
-        }
-      }).catch(function(err) {
-        console.log(err);
-      });
+								findNewBlock(height + 1);
+							});
+						});
+					} else {
+						console.log('No new blocks found');
+					}
+				}).catch(function(err) {
+					console.log(err);
+				});
+		});
   });
 }
 
@@ -361,9 +375,17 @@ function parseSStx(sstx, next) {
   var counter = 1;
   if (sstx) {
   for (let tx of sstx) {
-    exec("bash ./parsesstx.sh " + tx, function(error, stdout, stderr) {
+    // dcrctl decoderawtransaction $(dcrctl getrawtransaction $txid)
+   exec(config.dcrctl_path + " getrawtransaction " + tx, function(error1, stdout1, stderr1) {
+    if (error1 || stderr1) {
+      console.error(error1);
+      console.error(stderr1);
+      return next(error1, null);
+    }
+    exec(config.dcrctl_path + " decoderawtransaction " + stdout1.trim(), function(error, stdout, stderr) {
       if (error || stderr) {
-        console.error(error)
+        console.error(error);
+        console.error(stderr);
         return next(error, null);
       }
       console.log('Parsing SStx transaction ' + counter + ' of ' + sstx.length + ': ' + tx);
@@ -395,6 +417,7 @@ function parseSStx(sstx, next) {
       }
       counter++;
     });
+   });
   }
   } else {
         return next(null, yes_votes);
@@ -402,7 +425,7 @@ function parseSStx(sstx, next) {
 }
 
 function getAverageMempoolFees() {
-  exec("/opt/go/bin/dcrctl ticketfeeinfo 1 1", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " ticketfeeinfo 1 1", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
@@ -428,7 +451,7 @@ function getAverageMempoolFees() {
 }
 
 function getStakepoolInfo() {
-  exec("/opt/go/bin/dcrctl --wallet getstakeinfo", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " --wallet getstakeinfo", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
@@ -510,7 +533,7 @@ function updateMarketCap() {
 }
 
 function saveNetworkHashrate() {
-  exec("/opt/go/bin/dcrctl getmininginfo", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " getmininginfo", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {
@@ -568,7 +591,7 @@ function parsePoolsHashrate() {
 }
 
 function updateTicketpoolvalue() {
-  exec("/opt/go/bin/dcrctl getticketpoolvalue", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " getticketpoolvalue", function(error, stdout, stderr) {
     try {
       var price = parseInt(stdout, 10);
     } catch(e) {
@@ -587,7 +610,7 @@ function updateTicketpoolvalue() {
 }
 
 function updateCoinSupply() {
-  exec("/opt/go/bin/dcrctl getcoinsupply", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " getcoinsupply", function(error, stdout, stderr) {
     try {
       var supply = parseInt(stdout, 10);
     } catch(e) {
@@ -606,7 +629,7 @@ function updateCoinSupply() {
 }
 
 function updateEstimatedTicketPrice(hash) {
-  exec("/opt/go/bin/dcrctl estimatestakediff", function(error, stdout, stderr) {
+  exec(config.dcrctl_path + " estimatestakediff", function(error, stdout, stderr) {
     try {
       var data = JSON.parse(stdout);
     } catch(e) {

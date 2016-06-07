@@ -12,7 +12,8 @@
     "rpc_cert" : "",
     "rpc_user" : "",
     "rpc_password" : "",
-    "seeder_dump_path" : "/change-this-path/dnsseed.dump.json"
+    "seeder_dump_path" : "/change-this-path/dnsseed.dump.json",
+    "dcrctl_path" : "dcrctl"
   },
   "production": {
     "username": "decred",
@@ -27,6 +28,7 @@
     "rpc_cert" : "",
     "rpc_user" : "",
     "rpc_password" : "",
-    "seeder_dump_path" : "/change-this-path/dnsseed.dump.json"
+    "seeder_dump_path" : "/change-this-path/dnsseed.dump.json",
+    "dcrctl_path" : "dcrctl"
   }
 }
